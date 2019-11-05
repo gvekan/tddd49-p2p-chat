@@ -7,6 +7,22 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <local:SidePanel Grid.Column="0"/>
+
+        <Grid Grid.Column="1">
+            <StackPanel HorizontalAlignment="Left" Height="343" Margin="141,10,0,0" VerticalAlignment="Top" Width="641" Background="#FFBBBBBB"/>
+            <TextBox HorizontalAlignment="Left" Height="51" Margin="146,358,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="565" MaxLines="2147483645" AcceptsReturn="True"/>
+            <Button Content="Button" HorizontalAlignment="Left" Margin="716,383,0,0" VerticalAlignment="Top" Width="66" Height="26"/>
+            <Button Content="Button" HorizontalAlignment="Left" Margin="716,358,0,0" VerticalAlignment="Top" Width="66" Height="26"/>
+        </Grid>
         
     </Grid>
 </Window>
