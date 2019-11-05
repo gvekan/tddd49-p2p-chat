@@ -6,18 +6,13 @@
              xmlns:local="clr-namespace:TDDD49"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="150">
-    <Grid Background="AntiqueWhite">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <Button  Grid.Row="0" Content="Settings" HorizontalAlignment="Right" VerticalAlignment="Top" Width="16" Height="16" Click="Button_Click"/>
-        <Label  Grid.Row="0" Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Width="106"/>
-        <TextBox  Grid.Row="2" HorizontalAlignment="Left" Height="21" TextWrapping="Wrap" Text="Port" VerticalAlignment="Top" Width="136"/>
-        <TextBox  Grid.Row="1" HorizontalAlignment="Left" Height="21" TextWrapping="Wrap" Text="Port" VerticalAlignment="Top" Width="136"/>
-        <ScrollViewer Grid.Row="4" Background="#FFC34A4A">
+        <local:ConnectForm/>
+        <ScrollViewer Grid.Row="1" Background="#638C98">
             <StackPanel  HorizontalAlignment="Left"/>
         </ScrollViewer>
         
