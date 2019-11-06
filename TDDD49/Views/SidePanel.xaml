@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="TDDD49.Views.SidePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TDDD49.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="200">
+
+    <Grid Background="#638C98">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Border BorderBrush="#dddddd" BorderThickness="0,0,2,2"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <WrapPanel>
+                <Label Content="Username"/>
+                <Label Content="(179.3.20.17.0)"/>
+            </WrapPanel>
+
+            <Button Grid.Column="1" Content="NEW" Margin="5" Height="30" Width="30"/>
+        </Grid>
+
+        <WrapPanel Grid.Row="1" Background="#eeeeee">
+            <Label Content="Friend"/>
+            <Label Content="(179.3.20.17.0)"/>
+        </WrapPanel>
+
+        <Border BorderBrush="#dddddd" Grid.Row="2" BorderThickness="0,2,2,0"/>
+        <ScrollViewer Grid.Row="2" Margin="0,2,2,0">
+            <StackPanel  HorizontalAlignment="Left"/>
+        </ScrollViewer>
+
+    </Grid>
+
+</UserControl>

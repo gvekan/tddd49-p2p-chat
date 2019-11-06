@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TDDD49
+namespace TDDD49.Views
 {
     /// <summary>
     /// Interaction logic for ChatView.xaml

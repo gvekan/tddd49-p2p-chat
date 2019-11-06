@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TDDD49
+namespace TDDD49.Views
 {
     /// <summary>
-    /// Interaction logic for ConnectForm.xaml
+    /// Interaction logic for ChatPanel.xaml
     /// </summary>
-    public partial class ConnectForm : UserControl
+    public partial class ChatPanel : UserControl
     {
-        public ConnectForm()
+        public ChatPanel()
         {
             InitializeComponent();
         }
