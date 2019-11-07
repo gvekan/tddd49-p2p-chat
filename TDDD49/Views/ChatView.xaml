@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:TDDD49.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#eeeeee">
+    <Grid Background="{StaticResource SecondaryBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150"/>
             <ColumnDefinition/>

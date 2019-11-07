@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:TDDD49"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#2F82AC"/>
+        <SolidColorBrush x:Key="DarkPrimaryBrush" Color="#2A759A"/>
+        <SolidColorBrush x:Key="SecondaryBrush" Color="#ffffff"/>
+        <SolidColorBrush x:Key="DarkSecondaryBrush" Color="#cccccc"/>
+        <SolidColorBrush x:Key="PrimaryBorderBrush" Color="#cccccc"/>
     </Application.Resources>
 </Application>

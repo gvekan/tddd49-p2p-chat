@@ -13,7 +13,7 @@
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <Grid Background="#dddddd">
+        <Grid Background="{StaticResource DarkSecondaryBrush}">
             <Button HorizontalAlignment="Center" Content="Disconnect"/>
         </Grid>
 
@@ -25,7 +25,7 @@
         </ScrollViewer>
 
         <!-- Message creator -->
-        <Grid Grid.Row="2" Background="#dddddd">
+        <Grid Grid.Row="2" Background="{StaticResource DarkSecondaryBrush}">
 
             <Grid.RowDefinitions>
                 <RowDefinition/>

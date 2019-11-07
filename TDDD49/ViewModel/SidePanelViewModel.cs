@@ -102,6 +102,14 @@ namespace TDDD49.ViewModel
                 return new RelayCommand(parameter => Actions.OpenDialog(typeof(ConnectDialog)));
             }
         }
+        public ICommand OpenSettingsDialogCommand
+        {
+            get
+            {
+                // TODO: Add canExecute Func to detect internet connection
+                return new RelayCommand(parameter => Actions.OpenDialog(typeof(SettingsDialog)));
+            }
+        }
 
         #endregion
     }

@@ -11,14 +11,14 @@
         <vm:SidePanelViewModel x:Key="sidePanelVM"/>
     </UserControl.Resources>
 
-    <Grid Background="#638C98" DataContext="{Binding Source={StaticResource sidePanelVM}}">
+    <Grid Background="{StaticResource PrimaryBrush}" DataContext="{Binding Source={StaticResource sidePanelVM}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
-        </Grid.RowDefinitions>
+        </Grid.RowDefinitions> 
 
-        <Border BorderBrush="#dddddd" BorderThickness="0,0,2,0"/>
+        <Border BorderBrush="{StaticResource PrimaryBorderBrush}" BorderThickness="0,0,2,0"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -31,7 +31,8 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1">
-                <Button Height="30" Width="30" Padding="2" Margin="0,5,0,0">
+                <Button Height="30" Width="30" Padding="2" Margin="0,5,0,0"
+                    Command="{Binding OpenSettingsDialogCommand}">
                     <Image Source="../edit.png"/>
                 </Button>
                 <Button Content="NEW" Margin="5" Height="30" Width="30"
@@ -40,13 +41,13 @@
             </StackPanel>
         </Grid>
 
-        <Border BorderBrush="#dddddd" Grid.Row="1" BorderThickness="0,2,0,2"/>
-        <StackPanel Grid.Row="1" Background="#eeeeee" Margin="0,2,0,2">
+        <Border BorderBrush="{StaticResource PrimaryBorderBrush}" Grid.Row="1" BorderThickness="2,2,0,2"/>
+        <StackPanel Grid.Row="1" Background="{StaticResource SecondaryBrush}" Margin="2,2,0,2">
             <Label Content="{Binding CurrentChatName, Mode=OneWay}"/>
             <Label Content="{Binding CurrentChatIPAddr, Mode=OneWay}"/>
         </StackPanel>
 
-        <Border BorderBrush="#dddddd" Grid.Row="2" BorderThickness="0,0,2,0"/>
+        <Border BorderBrush="{StaticResource PrimaryBorderBrush}" Grid.Row="2" BorderThickness="0,0,2,0"/>
         <ScrollViewer Grid.Row="2" Margin="0,0,2,0">
             <StackPanel>
                 <local:SidePanelListItem/>
