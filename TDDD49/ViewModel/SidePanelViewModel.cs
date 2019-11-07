@@ -26,7 +26,7 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return new RelayCommand(OpenConnectDialog);
+                return new RelayCommand(param => OpenConnectDialog());
             }
         }
 
