@@ -25,10 +25,10 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <WrapPanel>
-                <Label Content="Username"/>
-                <Label Content="(179.3.20.17.0)"/>
-            </WrapPanel>
+            <StackPanel>
+                <Label Content="{Binding Username, Mode=OneWay}"/>
+                <Label Content="{Binding UserIPAddr, Mode=OneWay}"/>
+            </StackPanel>
 
             <StackPanel Grid.Column="1">
                 <Button Height="30" Width="30" Padding="2" Margin="0,5,0,0">
@@ -41,14 +41,23 @@
         </Grid>
 
         <Border BorderBrush="#dddddd" Grid.Row="1" BorderThickness="0,2,0,2"/>
-        <WrapPanel Grid.Row="1" Background="#eeeeee" Margin="0,2,0,2">
-            <Label Content="Friend"/>
-            <Label Content="(179.3.20.17.0)"/>
-        </WrapPanel>
+        <StackPanel Grid.Row="1" Background="#eeeeee" Margin="0,2,0,2">
+            <Label Content="{Binding CurrentChatName, Mode=OneWay}"/>
+            <Label Content="{Binding CurrentChatIPAddr, Mode=OneWay}"/>
+        </StackPanel>
 
         <Border BorderBrush="#dddddd" Grid.Row="2" BorderThickness="0,0,2,0"/>
         <ScrollViewer Grid.Row="2" Margin="0,0,2,0">
-            <StackPanel  HorizontalAlignment="Left"/>
+            <StackPanel>
+                <local:SidePanelListItem/>
+                <local:SidePanelListItem/>
+                <local:SidePanelListItem/>
+                <local:SidePanelListItem/>
+                <local:SidePanelListItem/>
+                <local:SidePanelListItem/>
+                <local:SidePanelListItem/>
+                <local:SidePanelListItem/>
+            </StackPanel>
         </ScrollViewer>
 
     </Grid>

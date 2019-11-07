@@ -8,16 +8,88 @@ using TDDD49.Commands;
 using TDDD49.Views;
 using System.Windows;
 using System.Windows.Controls;
+using TDDD49.Helpers;
 
 namespace TDDD49.ViewModel
 {
     class SidePanelViewModel : ViewModelBase
     {
         #region Private Fields
-        // List of connections
+        private String _Username;
+        private String _UserIPAddr;
+        private String _CurrentChatName;
+        private String _CurrentChatIPAddr;
+
+        // TODO: Add list of connections
         #endregion
 
+        public SidePanelViewModel()
+        {
+            Username = "Dummy Name";
+            UserIPAddr = "No connection";
+            CurrentChatName = "My Friends Dummy Name";
+            CurrentChatIPAddr = "No connection";
+        }
+
         #region Public Properties
+
+        public String Username
+        {
+            get
+            {
+                return _Username;
+            }
+
+            set
+            {
+                _Username = value;
+                OnPropertyChanged("UserName");
+            }
+        }
+
+        public String UserIPAddr
+        {
+            get
+            {
+                return _UserIPAddr;
+            }
+
+            set
+            {
+                _UserIPAddr = value;
+                OnPropertyChanged("UserIpAdrr");
+            }
+        }
+
+        public String CurrentChatIPAddr
+        {
+            get
+            {
+                return _CurrentChatIPAddr;
+            }
+
+            set
+            {
+                _CurrentChatIPAddr = value;
+                OnPropertyChanged("CurrentChatIpAdrr");
+            }
+        }
+
+        public String CurrentChatName
+        {
+            get
+            {
+                return _CurrentChatName;
+            }
+
+            set
+            {
+                _CurrentChatName = value;
+                OnPropertyChanged("CurrentChatName");
+            }
+        }
+
+
         #endregion
 
         #region Commands
@@ -26,7 +98,8 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return new OpenDialogCommand(typeof(ConnectDialog));
+                // TODO: Add canExecute Func to detect internet connection
+                return new RelayCommand(parameter => Actions.OpenDialog(typeof(ConnectDialog)));
             }
         }
 

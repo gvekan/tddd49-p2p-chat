@@ -56,9 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Commands\OpenDialogCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="ConnectionService.cs" />
+    <Compile Include="Helpers\Actions.cs" />
     <Compile Include="ViewModel\ConnectDialogViewModel.cs" />
     <Compile Include="ViewModel\SidePanelViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -73,6 +73,9 @@
     </Compile>
     <Compile Include="Views\SidePanel.xaml.cs">
       <DependentUpon>SidePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SidePanelListItem.xaml.cs">
+      <DependentUpon>SidePanelListItem.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -99,6 +102,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SidePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SidePanelListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
