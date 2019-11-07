@@ -26,20 +26,8 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return new RelayCommand(OpenConnectDialog);
+                return new OpenDialogCommand(typeof(ConnectDialog));
             }
-        }
-
-        #endregion
-
-        #region Methods
-
-        internal void OpenConnectDialog()
-        {
-            ConnectDialog cd = new ConnectDialog();
-            cd.Owner = Application.Current.MainWindow;
-
-            cd.ShowDialog();
         }
 
         #endregion
