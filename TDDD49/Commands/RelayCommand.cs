@@ -9,23 +9,29 @@ namespace TDDD49.Commands
 {
     public class RelayCommand : ICommand
     {
-        private Action commandTask;
+        private Action<object> execute;
+        private Func<object, bool> canExecute;
 
-        public RelayCommand(Action workToDo)
+        public event EventHandler CanExecuteChanged
         {
-            commandTask = workToDo;
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
+
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        {
+            this.execute = execute;
+            this.canExecute = canExecute;
         }
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            return this.canExecute == null || this.canExecute(parameter);
         }
-
-        public event EventHandler CanExecuteChanged;
 
         public void Execute(object parameter)
         {
-            commandTask();
+            this.execute(parameter);
         }
     }
 }
