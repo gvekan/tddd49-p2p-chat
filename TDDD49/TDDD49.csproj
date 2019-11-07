@@ -58,6 +58,8 @@
     </ApplicationDefinition>
     <Compile Include="Commands\OpenDialogCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="ConnectionService.cs" />
+    <Compile Include="ViewModel\ConnectDialogViewModel.cs" />
     <Compile Include="ViewModel\SidePanelViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="Views\ChatPanel.xaml.cs">
@@ -68,9 +70,6 @@
     </Compile>
     <Compile Include="Views\ConnectDialog.xaml.cs">
       <DependentUpon>ConnectDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ConnectForm.xaml.cs">
-      <DependentUpon>ConnectForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SidePanel.xaml.cs">
       <DependentUpon>SidePanel.xaml</DependentUpon>
@@ -96,10 +95,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ConnectDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ConnectForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
