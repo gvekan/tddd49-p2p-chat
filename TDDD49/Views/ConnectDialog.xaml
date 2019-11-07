@@ -4,14 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TDDD49.Views"
+        xmlns:vm="clr-namespace:TDDD49.ViewModel"
         mc:Ignorable="d"
         Title="ConnectDialog" Height="200" Width="300">
+
+    <Window.Resources>
+        <vm:ConnectDialogViewModel x:Key="connectDialogVM"/>
+    </Window.Resources>
     <Grid>
         <StackPanel Background="#425F67">
 
             <!-- Form -->
             <Label Content="IP" VerticalAlignment="Bottom"/>
-            <TextBox Margin="5,0"/>
+            <TextBox Margin="5,0" Text="{Binding Source={StaticResource connectDialogVM}, Path=IPAddr, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Grid.Column="1" Content="Port" VerticalAlignment="Bottom"/>
             <TextBox Margin="5,0, 5, 10"/>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
