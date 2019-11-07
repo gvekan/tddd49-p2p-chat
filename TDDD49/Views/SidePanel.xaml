@@ -14,7 +14,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Border BorderBrush="#dddddd" BorderThickness="0,0,2,2"/>
+        <Border BorderBrush="#dddddd" BorderThickness="0,0,2,0"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -29,13 +29,14 @@
             <Button Grid.Column="1" Content="NEW" Margin="5" Height="30" Width="30"/>
         </Grid>
 
-        <WrapPanel Grid.Row="1" Background="#eeeeee">
+        <Border BorderBrush="#dddddd" Grid.Row="1" BorderThickness="0,2,0,2"/>
+        <WrapPanel Grid.Row="1" Background="#eeeeee" Margin="0,2,0,2">
             <Label Content="Friend"/>
             <Label Content="(179.3.20.17.0)"/>
         </WrapPanel>
 
-        <Border BorderBrush="#dddddd" Grid.Row="2" BorderThickness="0,2,2,0"/>
-        <ScrollViewer Grid.Row="2" Margin="0,2,2,0">
+        <Border BorderBrush="#dddddd" Grid.Row="2" BorderThickness="0,0,2,0"/>
+        <ScrollViewer Grid.Row="2" Margin="0,0,2,0">
             <StackPanel  HorizontalAlignment="Left"/>
         </ScrollViewer>
 
