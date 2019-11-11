@@ -11,20 +11,29 @@ namespace TDDD49
 {
     class ConnectionService
     {
-        IPEndPoint IP = null;
+        private IPEndPoint IP;
+        private Thread listen;
         ConnectionService(IPEndPoint IP)
         {
             this.IP = IP;
         }
 
-        public void ChangePort(int Port)
+        public int Port
         {
-            IP.Port = Port;
+            set
+            {
+                if (IP.Port != value)
+                {
+                    IP.Port = value;
+                    listen.Interrupt();
+                    StartListen();
+                }
+            }
         }
 
         public void StartListen()
         {
-            new Thread(new ThreadStart(Listen));
+            listen = new Thread(new ThreadStart(Listen));
         }
 
         public void Listen()
@@ -37,6 +46,7 @@ namespace TDDD49
             while (true)
             {
                 Socket conSocket = listenSocket.Accept();
+                // TODO: Save thread somewhere
                 new Thread(new ThreadStart(() => HandleMessages(conSocket)));
             }
         }
