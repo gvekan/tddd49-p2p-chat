@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TDDD49.Helpers;
 using TDDD49.ViewModel;
 using TDDD49.Views;
+using System.Windows;
 
 namespace TDDD49
 {
@@ -61,8 +62,10 @@ namespace TDDD49
             while (true)
             {
                 Socket conSocket = listenSocket.Accept();
-                AcceptDialog dialog = new AcceptDialog();
-                dialog.DataContext = new AcceptDialogViewModel(conSocket.RemoteEndPoint.ToString(), "Someone", () => HandleConnection(conSocket));
+                RequestDialog dialog = new RequestDialog();
+                dialog.Owner = Application.Current.MainWindow;
+                dialog.DataContext = new RequestDialogViewModel(conSocket.RemoteEndPoint.ToString(), "Someone", parameter => HandleConnection(conSocket), parameter => { });
+                dialog.ShowDialog();
                 // TODO: Save thread somewhere
             }
         }

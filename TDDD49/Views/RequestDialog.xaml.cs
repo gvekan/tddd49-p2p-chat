@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace TDDD49.Views
 {
     /// <summary>
-    /// Interaction logic for ConnectionDialog.xaml
+    /// Interaction logic for RequestDialog.xaml
     /// </summary>
-    public partial class AcceptDialog : UserControl
+    public partial class RequestDialog : Window
     {
-        public AcceptDialog()
+        public RequestDialog()
         {
             InitializeComponent();
         }
