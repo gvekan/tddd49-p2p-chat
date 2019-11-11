@@ -13,5 +13,15 @@ namespace TDDD49
     /// </summary>
     public partial class App : Application
     {
+        public ConnectionService _ConnectionService;
+        void AppStartup(object Sender, StartupEventArgs e)
+        {
+
+
+            _ConnectionService = new ConnectionService();
+
+            MainWindow = new MainWindow();
+            MainWindow.Show();
+        }
     }
 }

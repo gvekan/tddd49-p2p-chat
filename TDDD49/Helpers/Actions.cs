@@ -10,10 +10,10 @@ namespace TDDD49.Helpers
     class Actions
     {
 
-        public static void HandleBugException(Exception e)
+        public static void HandleBugException(Exception e, String message = "Oops! Something went wrong.")
         {
             Console.WriteLine(e.ToString());
-            MessageBox.Show("Oops! Something went wrong.");
+            MessageBox.Show(message);
         }
         public static void OpenDialog(Type t)
         {

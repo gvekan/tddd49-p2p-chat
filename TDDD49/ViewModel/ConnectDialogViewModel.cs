@@ -35,8 +35,9 @@ namespace TDDD49.ViewModel
         }
         public void Connect()
         {
+            MessageBox.Show("Attempting connect");
+            ((App)Application.Current)._ConnectionService.Connect(_IPAddr, _Port);
             
-            MessageBox.Show("Not implemented yet");
         }
     }
 }
