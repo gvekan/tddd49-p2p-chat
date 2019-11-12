@@ -64,10 +64,13 @@ namespace TDDD49
             while (true)
             {
                 Socket conSocket = listenSocket.Accept();
-                RequestDialog dialog = new RequestDialog();
-                dialog.Owner = Application.Current.MainWindow;
-                dialog.DataContext = new RequestDialogViewModel(conSocket.RemoteEndPoint.ToString(), "Someone", parameter => HandleConnection(conSocket), parameter => { });
-                dialog.ShowDialog();
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    RequestDialog dialog = new RequestDialog();
+                    dialog.Owner = Application.Current.MainWindow;
+                    dialog.DataContext = new RequestDialogViewModel(conSocket.RemoteEndPoint.ToString(), "Someone", parameter => HandleConnection(conSocket), parameter => { });
+                    dialog.ShowDialog();
+                });
                 // TODO: Save thread somewhere
             }
         }
