@@ -17,9 +17,9 @@
         <Label Content="IP" VerticalAlignment="Bottom"/>
         <TextBox Margin="5,0" Text="{Binding Source={StaticResource connectDialogVM}, Path=IPAddr, UpdateSourceTrigger=PropertyChanged}"/>
         <Label Grid.Column="1" Content="Port" VerticalAlignment="Bottom"/>
-        <TextBox Margin="5,0, 5, 10"/>
+        <TextBox Margin="5,0, 5, 10" Text="{Binding Source={StaticResource connectDialogVM}, Path=Port, UpdateSourceTrigger=PropertyChanged}"/>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5">
-            <Button Content="Connect" Width="50" IsDefault="True" Margin="0,0,5,0"/>
+            <Button Content="Connect" Width="50" IsDefault="True" Margin="0,0,5,0" Command="{Binding Source={StaticResource connectDialogVM}, Path=ConnectCommand}"/>
             <Button Name="cancelButton" Width="50" IsCancel="True">Cancel</Button>
         </StackPanel>
 

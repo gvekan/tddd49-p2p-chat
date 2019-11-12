@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using TDDD49.Helpers;
 using TDDD49.ViewModel;
 using TDDD49.Views;
@@ -40,7 +41,8 @@ namespace TDDD49
 
         public void StartListen()
         {
-            listenThread = new Thread(new ThreadStart(Listen));
+            listenThread = new Thread(new ThreadStart(() => Listen()));
+            listenThread.Start();
         }
 
         public void Listen()
@@ -82,32 +84,35 @@ namespace TDDD49
         }
        
 
-        public Socket Connect(string IP, string Port)
+        public void Connect(string IP, string Port)
         {
-            Socket s = null;
             IPHostEntry hostEntry = Dns.GetHostEntry(IP);
             foreach (IPAddress address in hostEntry.AddressList)
             {
                 IPEndPoint ipe = new IPEndPoint(address, Convert.ToInt32(Port));
                 Socket tempSocket =
                     new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
-                tempSocket.Connect(ipe);
+                try
+                {
+                    tempSocket.Connect(ipe);
+                } catch(SocketException e)
+                {
+                }
+                
 
                 if (tempSocket.Connected)
                 {
                     // TODO: SPAWN NEW THREAD
-                    s = tempSocket;
-                    HandleConnection(s);
-                    break;
+                    HandleConnection(tempSocket);
+                    MessageBox.Show("Connected");
+                    return;
                 }
                 else
                 {
                     continue;
                 }
+                throw new InvalidIPException("Connection could not be made");
             }
-
-            return s;
         }
     }
 }

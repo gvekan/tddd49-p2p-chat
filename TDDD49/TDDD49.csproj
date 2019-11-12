@@ -60,6 +60,7 @@
     <Compile Include="Connection.cs" />
     <Compile Include="ConnectionService.cs" />
     <Compile Include="Helpers\Actions.cs" />
+    <Compile Include="Exceptions\InvalidIPException.cs" />
     <Compile Include="ViewModel\AcceptDialogViewModel.cs" />
     <Compile Include="ViewModel\ConnectDialogViewModel.cs" />
     <Compile Include="ViewModel\SidePanelViewModel.cs" />
