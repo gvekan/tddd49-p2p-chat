@@ -21,7 +21,6 @@ namespace TDDD49.Models
         private int _Port;
         private string _Username;
         private string _IP;
-        // TODO: Add list of connections
         #endregion
 
         public UserModel(UserModelParams Params)

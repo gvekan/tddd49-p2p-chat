@@ -16,10 +16,10 @@ namespace TDDD49.ViewModel
 {
     class MainViewModel : NotifyPropertyChangedBase
     {
-        private MainModel Model;
 
         #region Private Fields
         private IConnectionService _ConnectionService;
+        private MainModel Model;
         // TODO: Add list of connections
         #endregion
 
@@ -59,7 +59,6 @@ namespace TDDD49.ViewModel
             {
                 return Model.Username;
             }
-
         }
 
         public String UserIPAddr

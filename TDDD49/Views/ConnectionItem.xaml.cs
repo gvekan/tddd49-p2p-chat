@@ -18,9 +18,9 @@ namespace TDDD49.Views
     /// <summary>
     /// Interaction logic for SidePanelListItem.xaml
     /// </summary>
-    public partial class SidePanelListItem : UserControl
+    public partial class ConnectionItem : UserControl
     {
-        public SidePanelListItem()
+        public ConnectionItem()
         {
             InitializeComponent();
         }

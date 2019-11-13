@@ -30,5 +30,18 @@ namespace TDDD49.Helpers
                 HandleBugException(e);
             }
         }
+
+        public static void CloseDialog(object parameter)
+        {
+            try
+            {
+                Window w = (Window) parameter;
+                w.Close();
+            }
+            catch (InvalidCastException e)
+            {
+                HandleBugException(e);
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@ using TDDD49.ViewModel;
 using TDDD49.Views;
 using TDDD49.Models;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace TDDD49.Services
 { 
@@ -22,7 +23,6 @@ namespace TDDD49.Services
         private Thread listenThread;
         private MainModel Model;
         #endregion
-        private List<Connection> connectionList = new List<Connection>(); // TODO: Temporary connection storage. Move to other place and use Events?
 
         public ConnectionService(MainModel Model)
         {
@@ -48,7 +48,7 @@ namespace TDDD49.Services
         public void StartListen()
         {
             if (listenThread != null)
-                listenThread.Interrupt();
+                listenThread.Interrupt(); // TODO!!!!!!!!!!!!!!!!!!!!!!!: Stop socket
             IP = new IPEndPoint(IPAddress.Any, Model.Port);
             listenThread = new Thread(new ThreadStart(() => Listen()));
             listenThread.Start();
@@ -85,7 +85,7 @@ namespace TDDD49.Services
         public void HandleConnection(Socket s)
         {
             Thread t = new Thread(new ThreadStart(() => HandleMessages(s)));
-            connectionList.Add(new Connection(t, s));
+            Model.Connections.Add(new ConnectionModel("Dummy name", "0.0.0.0:4789", new ObservableCollection<MessageModel>()));
         }
 
         private void HandleMessages(Socket s)

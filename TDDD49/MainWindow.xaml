@@ -47,6 +47,8 @@
             </Grid>
 
             <Border BorderBrush="{StaticResource PrimaryBorderBrush}" Grid.Row="1" BorderThickness="2,2,0,2"/>
+            
+            
             <StackPanel Grid.Row="1" Background="{StaticResource SecondaryBrush}" Margin="2,2,0,2">
                 <Label Content="{Binding CurrentChatName, Mode=OneWay}"/>
                 <Label Content="{Binding CurrentChatIPAddr, Mode=OneWay}"/>
@@ -54,17 +56,13 @@
 
             <Border BorderBrush="{StaticResource PrimaryBorderBrush}" Grid.Row="2" BorderThickness="0,0,2,0"/>
             <ScrollViewer Grid.Row="2" Margin="0,0,2,0">
-                <StackPanel>
-                    <!-- TODO: Remove dummy data -->
-                    <views:SidePanelListItem/>
-                    <views:SidePanelListItem/>
-                    <views:SidePanelListItem/>
-                    <views:SidePanelListItem/>
-                    <views:SidePanelListItem/>
-                    <views:SidePanelListItem/>
-                    <views:SidePanelListItem/>
-                    <views:SidePanelListItem/>
-                </StackPanel>
+                <ItemsControl ItemsSource="{Binding Connections}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <views:ConnectionItem DataContext="{Binding }"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </ScrollViewer>
 
         </Grid>

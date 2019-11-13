@@ -22,7 +22,7 @@
             <TextBox Grid.Column="2" Margin="0,0,5,0" Padding="5" Text="{Binding Port, Mode=OneWay}"/>
         </Grid>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5">
-            <Button Content="Save" Width="50" IsDefault="True" Margin="0,0,5,0"/>
+            <Button Content="Save" Width="50" IsDefault="True" Margin="0,0,5,0" Command="{Binding SaveCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
             <Button Name="cancelButton" Width="50" IsCancel="True">Cancel</Button>
         </StackPanel>
 

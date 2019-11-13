@@ -58,8 +58,9 @@
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Helpers\NotifyPropertyChangedBase.cs" />
-    <Compile Include="Models\Connection.cs" />
+    <Compile Include="Models\ConnectionModel.cs" />
     <Compile Include="Models\MainModel.cs" />
+    <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Services\ConnectionService.cs" />
     <Compile Include="Helpers\Actions.cs" />
@@ -67,6 +68,8 @@
     <Compile Include="Services\IConnectionService.cs" />
     <Compile Include="ViewModel\ConnectDialogViewModel.cs" />
     <Compile Include="ViewModel\AcceptDeclineDialogViewModel.cs" />
+    <Compile Include="ViewModel\ConnectionItemViewModel.cs" />
+    <Compile Include="ViewModel\CurrentConnectionItemViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\SettingsDialogViewModel.cs" />
     <Compile Include="Views\ChatView.xaml.cs">
@@ -78,11 +81,14 @@
     <Compile Include="Views\AcceptDeclineDialog.xaml.cs">
       <DependentUpon>AcceptDeclineDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CurrentConnectionItem.xaml.cs">
+      <DependentUpon>CurrentConnectionItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsDialog.xaml.cs">
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SidePanelListItem.xaml.cs">
-      <DependentUpon>SidePanelListItem.xaml</DependentUpon>
+    <Compile Include="Views\ConnectionItem.xaml.cs">
+      <DependentUpon>ConnectionItem.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -108,11 +114,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CurrentConnectionItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SidePanelListItem.xaml">
+    <Page Include="Views\ConnectionItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
