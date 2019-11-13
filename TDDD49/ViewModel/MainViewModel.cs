@@ -9,26 +9,46 @@ using TDDD49.Views;
 using System.Windows;
 using System.Windows.Controls;
 using TDDD49.Helpers;
+using TDDD49.Services;
+using TDDD49.Models;
 
 namespace TDDD49.ViewModel
 {
-    class SidePanelViewModel : ViewModelBase
+    class MainViewModel : NotifyPropertyChangedBase
     {
-        #region Private Fields
-        private String _Username;
-        private String _UserIPAddr;
-        private String _CurrentChatName;
-        private String _CurrentChatIPAddr;
+        private MainModel Model;
 
+        #region Private Fields
+        private IConnectionService _ConnectionService;
         // TODO: Add list of connections
         #endregion
 
-        public SidePanelViewModel()
+
+        private String _CurrentChatName;
+        private String _CurrentChatIPAddr;
+
+        public MainViewModel(IConnectionService _ConnectionService, MainModel Model)
         {
-            Username = "Dummy Name";
-            UserIPAddr = "No connection";
+            this._ConnectionService = _ConnectionService;
+            this.Model = Model;
+            Model.PropertyChanged += Model_PropertyChanged;
+
+
             CurrentChatName = "My Friends Dummy Name";
             CurrentChatIPAddr = "No connection";
+        }
+
+        private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "Port":
+                    OnPropertyChanged("UserIPAddr");
+                    break;
+                default:
+                    OnPropertyChanged(e.PropertyName);
+                    break;
+            }
         }
 
         #region Public Properties
@@ -37,27 +57,16 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return _Username;
+                return Model.Username;
             }
 
-            set
-            {
-                _Username = value;
-                OnPropertyChanged("UserName");
-            }
         }
 
         public String UserIPAddr
         {
             get
             {
-                return _UserIPAddr;
-            }
-
-            set
-            {
-                _UserIPAddr = value;
-                OnPropertyChanged("UserIpAdrr");
+                return Model.IP + ":" + Model.Port.ToString();
             }
         }
 
@@ -99,15 +108,15 @@ namespace TDDD49.ViewModel
             get
             {
                 // TODO: Add canExecute Func to detect internet connection
-                return new RelayCommand(parameter => Actions.OpenDialog(typeof(ConnectDialog)));
+                return new RelayCommand(parameter => Actions.OpenDialog(typeof(ConnectDialog), new ConnectDialogViewModel()));
             }
         }
         public ICommand OpenSettingsDialogCommand
         {
             get
             {
-                // TODO: Add canExecute Func to detect internet connection
-                return new RelayCommand(parameter => Actions.OpenDialog(typeof(SettingsDialog)));
+                // TODO: Add a SettingsDialogViewModel
+                return new RelayCommand(parameter => Actions.OpenDialog(typeof(SettingsDialog), new SettingsDialogViewModel(Model)));
             }
         }
 

@@ -17,9 +17,9 @@ namespace TDDD49.Views
     /// <summary>
     /// Interaction logic for RequestDialog.xaml
     /// </summary>
-    public partial class RequestDialog : Window
+    public partial class AcceptDeclineDialog : Window
     {
-        public RequestDialog()
+        public AcceptDeclineDialog()
         {
             InitializeComponent();
         }

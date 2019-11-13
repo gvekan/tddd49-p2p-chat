@@ -10,17 +10,19 @@
     <StackPanel Background="{StaticResource PrimaryBrush}" >
 
         <!-- Form -->
-        <TextBox Text="MyCurrentUsername" Padding="5" Margin="5"/>
+        <TextBox Text="{Binding Username, Mode=TwoWay}" Padding="5" Margin="5"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Content="000.00.0.00.0:" VerticalAlignment="Bottom"/>
-            <TextBox Grid.Column="1" Margin="0,0,5,0" Padding="5" Text="2023"/>
+            <Label Content="{Binding IP, Mode=TwoWay}" VerticalAlignment="Bottom"/>
+            <Label Grid.Column="1" Content=":" VerticalAlignment="Bottom"/>
+            <TextBox Grid.Column="2" Margin="0,0,5,0" Padding="5" Text="{Binding Port, Mode=OneWay}"/>
         </Grid>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5">
-            <Button Content="Connect" Width="50" IsDefault="True" Margin="0,0,5,0"/>
+            <Button Content="Save" Width="50" IsDefault="True" Margin="0,0,5,0"/>
             <Button Name="cancelButton" Width="50" IsCancel="True">Cancel</Button>
         </StackPanel>
 

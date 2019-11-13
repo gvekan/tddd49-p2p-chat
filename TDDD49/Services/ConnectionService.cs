@@ -10,43 +10,51 @@ using System.Windows;
 using TDDD49.Helpers;
 using TDDD49.ViewModel;
 using TDDD49.Views;
-using System.Windows;
+using TDDD49.Models;
+using System.ComponentModel;
 
-namespace TDDD49
-{
-    public class ConnectionService
+namespace TDDD49.Services
+{ 
+    class ConnectionService : IConnectionService
     {
+        #region Private Fields
         private IPEndPoint IP;
         private Thread listenThread;
-        private int defaultPort = 61523;
+        private MainModel Model;
+        #endregion
         private List<Connection> connectionList = new List<Connection>(); // TODO: Temporary connection storage. Move to other place and use Events?
 
-        public ConnectionService()
+        public ConnectionService(MainModel Model)
         {
-                IP = new IPEndPoint(IPAddress.Any, defaultPort);
-                StartListen();
+            // TODO: Set message
+            this.Model = Model;
+            Model.PropertyChanged += Model_PropertyChanged;
+            StartListen();
         }
 
-        public int Port
+        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            set
+            switch (e.PropertyName)
             {
-                if (IP.Port != value)
-                {
-                    IP.Port = value;
-                    listenThread.Interrupt();
+                case "Port":
                     StartListen();
-                }
+                    break;
+                case "Username":
+                    // TODO: Send alert
+                    break;
             }
         }
 
         public void StartListen()
         {
+            if (listenThread != null)
+                listenThread.Interrupt();
+            IP = new IPEndPoint(IPAddress.Any, Model.Port);
             listenThread = new Thread(new ThreadStart(() => Listen()));
             listenThread.Start();
         }
 
-        public void Listen()
+        private void Listen()
         {
             Socket listenSocket = new Socket(AddressFamily.InterNetwork,
                                      SocketType.Stream,
@@ -66,10 +74,9 @@ namespace TDDD49
                 Socket conSocket = listenSocket.Accept();
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    RequestDialog dialog = new RequestDialog();
-                    dialog.Owner = Application.Current.MainWindow;
-                    dialog.DataContext = new RequestDialogViewModel(conSocket.RemoteEndPoint.ToString(), "Someone", parameter => HandleConnection(conSocket), parameter => { });
-                    dialog.ShowDialog();
+                    Actions.OpenDialog(typeof(AcceptDeclineDialog), 
+                        new AcceptDeclineDialogViewModel(conSocket.RemoteEndPoint.ToString(), 
+                            "Someone", parameter => HandleConnection(conSocket), parameter => { }));
                 });
                 // TODO: Save thread somewhere
             }
@@ -81,7 +88,7 @@ namespace TDDD49
             connectionList.Add(new Connection(t, s));
         }
 
-        public void HandleMessages(Socket s)
+        private void HandleMessages(Socket s)
         {
             while (s.Connected)
             {

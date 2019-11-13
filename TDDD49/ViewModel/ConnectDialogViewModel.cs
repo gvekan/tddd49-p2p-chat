@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using TDDD49.Commands;
+using TDDD49.Helpers;
 
 namespace TDDD49.ViewModel
 {
-    class ConnectDialogViewModel : ViewModelBase
+    class ConnectDialogViewModel : NotifyPropertyChangedBase
     {
         private string _IPAddr = "";
         private string _Port = "";
@@ -44,7 +45,7 @@ namespace TDDD49.ViewModel
                 MessageBox.Show("Attempting connect " + Port + " " + IPAddr);
                 try
                 {
-                    ((App)Application.Current)._ConnectionService.Connect(_IPAddr, _Port);
+                    //((App)Application.Current)._ConnectionService.Connect(_IPAddr, _Port);
                 } catch(InvalidIPException)
                 {
                     MessageBox.Show("Could not connect to the specified IP and PORT. Please try again with different settings");

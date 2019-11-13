@@ -5,6 +5,9 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using TDDD49.ViewModel;
+using TDDD49.Services;
+using TDDD49.Models;
 
 namespace TDDD49
 {
@@ -13,14 +16,24 @@ namespace TDDD49
     /// </summary>
     public partial class App : Application
     {
-        public ConnectionService _ConnectionService;
         void AppStartup(object Sender, StartupEventArgs e)
-        {
+        { 
+
+            MainModel.MainModelParams Params = new MainModel.MainModelParams();
+            Params.Port = 6536;
+            Params.Username = "Gabriel";
+            Params.IP = "0.0.0.0";
+
+            MainModel _MainModel = new MainModel(Params);
 
 
-            _ConnectionService = new ConnectionService();
+            ConnectionService _ConnectionService = new ConnectionService(_MainModel);
 
             MainWindow = new MainWindow();
+            MainWindow.DataContext = new MainViewModel(_ConnectionService, _MainModel);
+
+
+
             MainWindow.Show();
         }
     }

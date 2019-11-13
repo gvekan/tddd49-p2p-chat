@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:TDDD49"
              Startup="AppStartup">
+
+             <!--Startup="AppStartup"-->
     <Application.Resources>
         <SolidColorBrush x:Key="PrimaryBrush" Color="#2F82AC"/>
         <SolidColorBrush x:Key="DarkPrimaryBrush" Color="#2A759A"/>

@@ -57,31 +57,29 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Connection.cs" />
-    <Compile Include="ConnectionService.cs" />
+    <Compile Include="Helpers\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Models\Connection.cs" />
+    <Compile Include="Models\MainModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Services\ConnectionService.cs" />
     <Compile Include="Helpers\Actions.cs" />
     <Compile Include="Exceptions\InvalidIPException.cs" />
+    <Compile Include="Services\IConnectionService.cs" />
     <Compile Include="ViewModel\ConnectDialogViewModel.cs" />
-    <Compile Include="ViewModel\RequestDialogViewModel.cs" />
-    <Compile Include="ViewModel\SidePanelViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="Views\ChatPanel.xaml.cs">
-      <DependentUpon>ChatPanel.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="ViewModel\AcceptDeclineDialogViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\SettingsDialogViewModel.cs" />
     <Compile Include="Views\ChatView.xaml.cs">
       <DependentUpon>ChatView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ConnectDialog.xaml.cs">
       <DependentUpon>ConnectDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RequestDialog.xaml.cs">
-      <DependentUpon>RequestDialog.xaml</DependentUpon>
+    <Compile Include="Views\AcceptDeclineDialog.xaml.cs">
+      <DependentUpon>AcceptDeclineDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsDialog.xaml.cs">
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SidePanel.xaml.cs">
-      <DependentUpon>SidePanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SidePanelListItem.xaml.cs">
       <DependentUpon>SidePanelListItem.xaml</DependentUpon>
@@ -98,10 +96,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\ChatPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\ChatView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -110,15 +104,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\RequestDialog.xaml">
+    <Page Include="Views\AcceptDeclineDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SidePanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

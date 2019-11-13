@@ -5,17 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using TDDD49.Commands;
+using TDDD49.Helpers;
 
 namespace TDDD49.ViewModel
 {
-    class RequestDialogViewModel : ViewModelBase
+    class AcceptDeclineDialogViewModel : NotifyPropertyChangedBase
     {
 
         private String _Message;
         private Action<object> AcceptAction;
         private Action<object> CancelAction;
 
-        public RequestDialogViewModel(String IP, String Username, Action<object> AcceptAction, Action<object> CancelAction)
+        public AcceptDeclineDialogViewModel(String IP, String Username, Action<object> AcceptAction, Action<object> CancelAction)
         {
             _Message = Username + " (" + IP + ") trying to connect to you.";
             this.AcceptAction = AcceptAction;

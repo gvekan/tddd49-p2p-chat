@@ -15,12 +15,13 @@ namespace TDDD49.Helpers
             Console.WriteLine(e.ToString());
             MessageBox.Show(message);
         }
-        public static void OpenDialog(Type t)
+        public static void OpenDialog(Type t, NotifyPropertyChangedBase vm)
         {
             try
             {
                 Window w = (Window)Activator.CreateInstance(t);
                 w.Owner = Application.Current.MainWindow;
+                w.DataContext = vm;
 
                 w.ShowDialog();
             }

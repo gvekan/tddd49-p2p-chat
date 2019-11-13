@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace TDDD49.Views
 {
     /// <summary>
-    /// Interaction logic for ChatView.xaml
+    /// Interaction logic for ChatPanel.xaml
     /// </summary>
     public partial class ChatView : UserControl
     {

@@ -5,11 +5,70 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TDDD49"
         xmlns:views="clr-namespace:TDDD49.Views"
+        xmlns:vm="clr-namespace:TDDD49.ViewModel"
         mc:Ignorable="d"
         Title="SeeSharp P2P Chat" Height="450" Width="800">
 
-    
-    <Grid>
-        <views:ChatView/>
+
+    <Grid Background="{StaticResource SecondaryBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Background="{StaticResource PrimaryBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Border BorderBrush="{StaticResource PrimaryBorderBrush}" BorderThickness="0,0,2,0"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+                    <Label Content="{Binding Username, Mode=OneWay}"/>
+                    <Label Content="{Binding UserIPAddr, Mode=OneWay}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <Button Height="30" Width="30" Padding="2" Margin="0,5,0,0"
+                    Command="{Binding OpenSettingsDialogCommand}">
+                        <Image Source="edit.png"/>
+                    </Button>
+                    <Button Content="NEW" Margin="5" Height="30" Width="30"
+                    Command="{Binding OpenConnectDialogCommand}"/>
+
+                </StackPanel>
+            </Grid>
+
+            <Border BorderBrush="{StaticResource PrimaryBorderBrush}" Grid.Row="1" BorderThickness="2,2,0,2"/>
+            <StackPanel Grid.Row="1" Background="{StaticResource SecondaryBrush}" Margin="2,2,0,2">
+                <Label Content="{Binding CurrentChatName, Mode=OneWay}"/>
+                <Label Content="{Binding CurrentChatIPAddr, Mode=OneWay}"/>
+            </StackPanel>
+
+            <Border BorderBrush="{StaticResource PrimaryBorderBrush}" Grid.Row="2" BorderThickness="0,0,2,0"/>
+            <ScrollViewer Grid.Row="2" Margin="0,0,2,0">
+                <StackPanel>
+                    <!-- TODO: Remove dummy data -->
+                    <views:SidePanelListItem/>
+                    <views:SidePanelListItem/>
+                    <views:SidePanelListItem/>
+                    <views:SidePanelListItem/>
+                    <views:SidePanelListItem/>
+                    <views:SidePanelListItem/>
+                    <views:SidePanelListItem/>
+                    <views:SidePanelListItem/>
+                </StackPanel>
+            </ScrollViewer>
+
+        </Grid>
+
+        <!--ContentControl/-->
     </Grid>
 </Window>
