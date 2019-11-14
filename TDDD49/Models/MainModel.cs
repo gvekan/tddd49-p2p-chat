@@ -17,6 +17,8 @@ namespace TDDD49.Models
         }
 
         private ConnectionModel _CurrentConnection;
+
+        // TODO: Use lock
         public ObservableCollection<ConnectionModel> Connections;
 
         public MainModel(MainModelParams Params) : base(Params)

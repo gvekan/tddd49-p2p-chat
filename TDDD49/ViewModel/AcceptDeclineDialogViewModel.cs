@@ -35,7 +35,7 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return new RelayCommand(AcceptAction);
+                return new RelayCommand(param => CloseAfterAction(param, AcceptAction));
             }
         }
 
@@ -43,8 +43,14 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return new RelayCommand(CancelAction);
+                return new RelayCommand(param => CloseAfterAction(param, CancelAction));
             }
+        }
+
+        public void CloseAfterAction(object param, Action<object> a)
+        {
+            a(param);
+            Actions.CloseDialog(param);
         }
     }
 }

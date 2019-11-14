@@ -18,6 +18,7 @@ namespace TDDD49.Models
         private string _Username;
         private string _IPAddrPort;
 
+        // TODO: Use lock
         public ObservableCollection<MessageModel> Messages;
 
         public ConnectionModel(string Username, string IPAddrPort, ObservableCollection<MessageModel> Messages, Thread t = null, Socket s = null)

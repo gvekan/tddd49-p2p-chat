@@ -8,18 +8,15 @@
         mc:Ignorable="d"
         Title="New Connection" Height="200" Width="300">
 
-    <Window.Resources>
-        <vm:ConnectDialogViewModel x:Key="connectDialogVM"/>
-    </Window.Resources>
     <StackPanel Background="{StaticResource PrimaryBrush}">
 
         <!-- Form -->
         <Label Content="IP" VerticalAlignment="Bottom"/>
-        <TextBox Margin="5,0" Text="{Binding Source={StaticResource connectDialogVM}, Path=IPAddr, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Margin="5,0" Text="{Binding IPAddr}"/>
         <Label Grid.Column="1" Content="Port" VerticalAlignment="Bottom"/>
-        <TextBox Margin="5,0, 5, 10" Text="{Binding Source={StaticResource connectDialogVM}, Path=Port, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Margin="5,0, 5, 10" Text="{Binding Port}"/>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5">
-            <Button Content="Connect" Width="50" IsDefault="True" Margin="0,0,5,0" Command="{Binding Source={StaticResource connectDialogVM}, Path=ConnectCommand}"/>
+            <Button Content="Connect" Width="50" IsDefault="True" Margin="0,0,5,0" Command="{Binding ConnectCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
             <Button Name="cancelButton" Width="50" IsCancel="True">Cancel</Button>
         </StackPanel>
 

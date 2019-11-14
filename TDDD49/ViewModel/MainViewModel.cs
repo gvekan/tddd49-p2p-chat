@@ -20,10 +20,9 @@ namespace TDDD49.ViewModel
         #region Private Fields
         private IConnectionService _ConnectionService;
         private MainModel Model;
-        // TODO: Add list of connections
         #endregion
 
-
+        // TODO: Remove these and use the model
         private String _CurrentChatName;
         private String _CurrentChatIPAddr;
 
@@ -107,7 +106,7 @@ namespace TDDD49.ViewModel
             get
             {
                 // TODO: Add canExecute Func to detect internet connection
-                return new RelayCommand(parameter => Actions.OpenDialog(typeof(ConnectDialog), new ConnectDialogViewModel()));
+                return new RelayCommand(parameter => Actions.OpenDialog(typeof(ConnectDialog), new ConnectDialogViewModel(_ConnectionService.Connect)));
             }
         }
         public ICommand OpenSettingsDialogCommand

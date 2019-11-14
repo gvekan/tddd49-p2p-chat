@@ -20,8 +20,10 @@ namespace TDDD49.Services
     {
         #region Private Fields
         private IPEndPoint IP;
-        private Thread listenThread;
+        private Thread ListenThread;
+        private Socket ListenSocket;
         private MainModel Model;
+
         #endregion
 
         public ConnectionService(MainModel Model)
@@ -47,11 +49,15 @@ namespace TDDD49.Services
 
         public void StartListen()
         {
-            if (listenThread != null)
-                listenThread.Interrupt(); // TODO!!!!!!!!!!!!!!!!!!!!!!!: Stop socket
+            if (ListenThread != null)
+            {
+                ListenThread.Abort();
+                ListenSocket.Shutdown(SocketShutdown.Both);
+            }
+
             IP = new IPEndPoint(IPAddress.Any, Model.Port);
-            listenThread = new Thread(new ThreadStart(() => Listen()));
-            listenThread.Start();
+            ListenThread = new Thread(new ThreadStart(() => Listen()));
+            ListenThread.Start();
         }
 
         private void Listen()
@@ -72,17 +78,22 @@ namespace TDDD49.Services
             while (true)
             {
                 Socket conSocket = listenSocket.Accept();
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    Actions.OpenDialog(typeof(AcceptDeclineDialog), 
-                        new AcceptDeclineDialogViewModel(conSocket.RemoteEndPoint.ToString(), 
-                            "Someone", parameter => HandleConnection(conSocket), parameter => { }));
-                });
-                // TODO: Save thread somewhere
+
+                HandleConnection(conSocket);
             }
         }
 
-        public void HandleConnection(Socket s)
+        private void HandleConnection(Socket s)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Actions.OpenDialog(typeof(AcceptDeclineDialog),
+                    new AcceptDeclineDialogViewModel(s.RemoteEndPoint.ToString(),
+                        "Someone", parameter => InitConnection(s), parameter => s.Shutdown(SocketShutdown.Both)));
+            });
+        }
+
+        public void InitConnection(Socket s)
         {
             Thread t = new Thread(new ThreadStart(() => HandleMessages(s)));
             Model.Connections.Add(new ConnectionModel("Dummy name", "0.0.0.0:4789", new ObservableCollection<MessageModel>()));
@@ -97,35 +108,33 @@ namespace TDDD49.Services
         }
        
 
-        public void Connect(string IP, string Port)
+        public bool Connect(string IP, string Port)
         {
-            IPHostEntry hostEntry = Dns.GetHostEntry(IP);
-            foreach (IPAddress address in hostEntry.AddressList)
+            IPAddress IPAddr;
+            try
             {
-                IPEndPoint ipe = new IPEndPoint(address, Convert.ToInt32(Port));
-                Socket tempSocket =
-                    new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                try
-                {
-                    tempSocket.Connect(ipe);
-                } catch(SocketException e)
-                {
-                }
-                
-
-                if (tempSocket.Connected)
-                {
-                    // TODO: SPAWN NEW THREAD
-                    HandleConnection(tempSocket);
-                    MessageBox.Show("Connected");
-                    return;
-                }
-                else
-                {
-                    continue;
-                }
+                IPAddress.TryParse(IP, out IPAddr);
+            }
+            catch (SocketException)
+            {
                 throw new InvalidIPException("Connection could not be made");
             }
+            IPEndPoint ipe = new IPEndPoint(IPAddr, Convert.ToInt32(Port));
+            Socket tempSocket =
+                new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+            try
+            {
+                tempSocket.BeginConnect(ipe);
+            } catch(SocketException)
+            {
+                throw new InvalidIPException("Connection could not be made");
+            }
+        }
+
+        private void StartConnection()
+        {
+
         }
     }
 }

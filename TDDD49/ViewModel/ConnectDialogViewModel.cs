@@ -16,6 +16,12 @@ namespace TDDD49.ViewModel
     {
         private string _IPAddr = "";
         private string _Port = "";
+        private Action<string, string> _ConnectAction;
+
+        public ConnectDialogViewModel(Action<string, string> ConnectAction)
+        {
+            _ConnectAction = ConnectAction;
+        }
 
         public string IPAddr
         {
@@ -37,18 +43,18 @@ namespace TDDD49.ViewModel
             }
         }
 
-
-        public void Connect()
+        public void Connect(object param)
         {
             if(Port.Length > 0 && IPAddr.Length > 0)
             {
                 MessageBox.Show("Attempting connect " + Port + " " + IPAddr);
                 try
                 {
-                    //((App)Application.Current)._ConnectionService.Connect(_IPAddr, _Port);
+                    _ConnectAction(_IPAddr, _Port);
                 } catch(InvalidIPException)
                 {
                     MessageBox.Show("Could not connect to the specified IP and PORT. Please try again with different settings");
+                    return;
                 }
                 
                 
@@ -56,7 +62,9 @@ namespace TDDD49.ViewModel
             else
             {
                 MessageBox.Show("Please enter a valid IP Address");
+                return;
             }
+            Actions.CloseDialog(param);
         }
         #region Commands
 
@@ -64,7 +72,7 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return new RelayCommand(param => this.Connect());
+                return new RelayCommand(param => this.Connect(param));
             }
         }
         #endregion
