@@ -62,6 +62,7 @@
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Helpers\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Messages\AcceptDeclineMessage.cs" />
     <Compile Include="Messages\MessageBase.cs" />
     <Compile Include="Messages\RequestConnectMessage.cs" />
     <Compile Include="Models\ConnectionModel.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Helpers\Actions.cs" />
     <Compile Include="Exceptions\InvalidIPException.cs" />
     <Compile Include="Services\IConnectionService.cs" />
+    <Compile Include="Services\MessageService.cs" />
     <Compile Include="ViewModel\ConnectDialogViewModel.cs" />
     <Compile Include="ViewModel\AcceptDeclineDialogViewModel.cs" />
     <Compile Include="ViewModel\ConnectionItemViewModel.cs" />

@@ -17,6 +17,7 @@ namespace TDDD49.Models
         }
 
         private ConnectionModel _CurrentConnection;
+        private bool _Connected;
 
         // TODO: Use lock
         public ObservableCollection<ConnectionModel> Connections;
@@ -38,9 +39,23 @@ namespace TDDD49.Models
 
             set
             {
+                // TODO: Move current connection to connections list
                 _CurrentConnection = value;
                 OnPropertyChanged("CurrentConnection");
             }
+        }
+
+        public bool Connected
+        {
+            get
+            {
+                return _Connected;
+            }
+            set
+            {
+                _Connected = value;
+            }
+
         }
 
         #endregion

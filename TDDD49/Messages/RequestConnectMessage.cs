@@ -8,10 +8,10 @@ namespace TDDD49.Messages
 {
     class RequestConnectMessage : MessageBase
     {
-        public RequestConnectMessage(String SenderUsername)
-        {
-            this.Sender = SenderUsername;
-            this.Message = "Request connection";
+        public RequestConnectMessage(String SenderUsername) : base("", SenderUsername, "RequestConnect")
+        {            
+            /*this.Sender = SenderUsername;
+            this.Message = "Request connection";*/
         }
     }
 }

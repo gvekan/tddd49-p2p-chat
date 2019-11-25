@@ -22,9 +22,6 @@ namespace TDDD49.ViewModel
         private MainModel Model;
         #endregion
 
-        // TODO: Remove these and use the model
-        private String _CurrentChatName;
-        private String _CurrentChatIPAddr;
 
         public MainViewModel(IConnectionService _ConnectionService, MainModel Model)
         {
@@ -106,7 +103,7 @@ namespace TDDD49.ViewModel
             get
             {
                 // TODO: Add canExecute Func to detect internet connection
-                return new RelayCommand(parameter => Actions.OpenDialog(typeof(ConnectDialog), new ConnectDialogViewModel(_ConnectionService.Connect)));
+                return new RelayCommand(parameter => Actions.OpenDialog(typeof(ConnectDialog), new ConnectDialogViewModel(_ConnectionService.Connect)), parameter => !Model.Connected);
             }
         }
         public ICommand OpenSettingsDialogCommand

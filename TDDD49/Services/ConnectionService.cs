@@ -19,14 +19,23 @@ using Newtonsoft.Json;
 
 namespace TDDD49.Services
 { 
+    public class StateObject
+    {
+        public const int BufferSize = 1024;
+        public byte[] buffer = new byte[BufferSize];
+
+        public StringBuilder sb = new StringBuilder();
+
+    }
+
     class ConnectionService : IConnectionService
     {
         #region Private Fields
         private IPEndPoint IP;
         private Thread ListenThread;
         private Socket ListenSocket;
+        private Socket _ConSocket = null;
         private MainModel Model;
-
         #endregion
 
         public ConnectionService(MainModel Model)
@@ -35,6 +44,19 @@ namespace TDDD49.Services
             this.Model = Model;
             Model.PropertyChanged += Model_PropertyChanged;
             StartListen();
+        }
+
+        public Socket ConSocket
+        {
+            get
+            {
+                return _ConSocket;
+            }
+            set
+            {
+                Model.Connected = value != null;
+                _ConSocket = value;
+            }
         }
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -82,66 +104,55 @@ namespace TDDD49.Services
             {
                 Socket conSocket = listenSocket.Accept();
 
-                HandleConnection(conSocket);
+                // TODO: Lock on ConSocket
+                if (ConSocket == null)
+                {
+                    ConSocket = conSocket;
+                    InitConnection();
+                } else
+                {
+                    conSocket.Shutdown(SocketShutdown.Both);
+                }
             }
         }
 
-        private void HandleConnection(Socket s)
+        // WHen we get a connection
+        private void InitConnection()
         {
             // Read info here
-            String buffer = "";
-            byte[] bytes = new byte[1024];
-            do
-            {
-                s.Receive(bytes);
-                buffer += Encoding.UTF8.GetString(bytes).TrimEnd('\0');
-                bytes = new byte[256];
-            } while (buffer.Substring(buffer.Length - 5) != "<EOM>");
-            buffer = buffer.Remove(buffer.Length-5);
-            RequestConnectMessage msg = (RequestConnectMessage)JsonConvert.DeserializeObject(buffer, typeof(RequestConnectMessage));
-            string ip = s.RemoteEndPoint.ToString(); // TODO: change port to RequestConnectMessage.Port
-            ConnectionModel cm = new ConnectionModel(ip,
-                       msg.Sender, null);
+            RequestConnectMessage msg = (RequestConnectMessage)JsonConvert.DeserializeObject(ReceiveMessage(ConSocket), typeof(RequestConnectMessage));
+            string ip = ConSocket.RemoteEndPoint.ToString(); // TODO: change port to RequestConnectMessage.Port
+            ConnectionModel cm = new ConnectionModel(ip, msg.Sender, null);
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Actions.OpenDialog(typeof(AcceptDeclineDialog),
                     new AcceptDeclineDialogViewModel(ip,
-                       msg.Sender, parameter => InitConnection(s, cm), parameter => s.Shutdown(SocketShutdown.Both)));
+                       msg.Sender, parameter => AcceptConnection(ConSocket, cm), parameter => DeclineConnection(ConSocket)));
             });
         }
 
-        public void InitConnection(Socket s, ConnectionModel cm)
+        private void SendAcceptDeclineMessage(Socket s, bool IsAccepted)
         {
+            AcceptDeclineMessage msg = new AcceptDeclineMessage(IsAccepted, this.Model.Username);
+            s.Send(Encoding.UTF8.GetBytes(msg.Serialize()));
+        }
+
+        public void AcceptConnection(Socket s, ConnectionModel cm)
+        {
+            SendAcceptDeclineMessage(s, true);
             // TODO: Check history and load it
-            Thread t = new Thread(new ThreadStart(() => HandleMessages(s)));
             Model.CurrentConnection = cm;
-            //Model.Connections.Add();
+            StartRecieve();
         }
 
-        private void HandleMessages(Socket s)
+        public void DeclineConnection(Socket s)
         {
-            while (s.Connected)
-            {
-
-            }
-        }
-       
-        public void ConnectCallback(IAsyncResult ar)
-        {
-            Socket client = (Socket)ar.AsyncState;
-            try
-            {
-                client.EndConnect(ar);
-            } catch (Exception e) // TODO: Narrower catch. Check what it throws and when
-            {
-                Console.WriteLine(e);
-            }
-
-            RequestConnectMessage msg = new RequestConnectMessage(this.Model.Username);
-            string strMsg = JsonConvert.SerializeObject(msg) + "<EOM>";
-            client.Send(Encoding.UTF8.GetBytes(strMsg));
+            SendAcceptDeclineMessage(s, false);
+            s.Shutdown(SocketShutdown.Both);
         }
 
+
+        // When user tries to connect to another user
         public void Connect(string IP, string Port)
         {
             IPAddress IPAddr;
@@ -154,21 +165,105 @@ namespace TDDD49.Services
                 throw new InvalidIPException("Connection could not be made");
             }
             IPEndPoint ipe = new IPEndPoint(IPAddr, Convert.ToInt32(Port));
-            Socket tempSocket =
-                new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            ConSocket = new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             try
             {
-                tempSocket.BeginConnect(ipe, new AsyncCallback(ConnectCallback), tempSocket);
+                ConSocket.BeginConnect(ipe, new AsyncCallback(ConnectCallback), ConSocket);
             } catch(SocketException) // TODO: Check what it throws and when
             {
                 throw new InvalidIPException("Connection could not be made");
             }
         }
 
-        private void StartConnection()
+        public void ConnectCallback(IAsyncResult ar)
         {
+            Socket client = (Socket)ar.AsyncState;
+            try
+            {
+                client.EndConnect(ar);
+            }
+            catch (Exception e) // TODO: Narrower catch. Check what it throws and when
+            {
+                Console.WriteLine(e);
+            }
 
+            RequestConnectMessage msg = new RequestConnectMessage(this.Model.Username);
+            string strMsg = msg.Serialize();
+            client.Send(Encoding.UTF8.GetBytes(strMsg));
+
+            AcceptDeclineMessage acceptDeclineMessage = (AcceptDeclineMessage)JsonConvert.DeserializeObject(ReceiveMessage(client), typeof(AcceptDeclineMessage));
+            if (acceptDeclineMessage.IsAccepted)
+            {
+                string ip = client.RemoteEndPoint.ToString(); // TODO: change port to RequestConnectMessage.Port
+                Model.CurrentConnection = new ConnectionModel(ip,
+                       acceptDeclineMessage.Sender, null);
+                StartRecieve();
+            }
+            else
+            {
+                client.Shutdown(SocketShutdown.Both);
+            }
+
+        }
+
+        private void StartRecieve()
+        {
+            StateObject so = new StateObject();
+
+            ConSocket.BeginReceive(so.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(RecieveCallback), so);
+        }
+
+        private void RecieveCallback(IAsyncResult ar)
+        {
+            StateObject state = (StateObject)ar.AsyncState;
+            string content = string.Empty;
+        
+            int bytesRead = ConSocket.EndReceive(ar);
+
+            if(bytesRead > 0)
+            {
+                state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+                content = state.sb.ToString();
+                int indexOfEOM = content.IndexOf("<EOM>");
+                while (indexOfEOM > -1)
+                {
+                    String message = content.Substring(0, indexOfEOM); // Ignores EOM
+                    HandleMessage(message);
+
+                    content = content.Substring(indexOfEOM + 4); // Ignores EOM
+
+
+                    indexOfEOM = content.IndexOf("<EOM>");
+                }
+                state.sb = new StringBuilder(content);
+
+            }
+
+            ConSocket.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(RecieveCallback), state);
+        }
+
+        private void HandleMessage(string Message)
+        {
+            dynamic msg = JsonConvert.DeserializeObject(Message);
+            
+            if (msg.Type == "Chat")
+            {
+            }
+            // TODO: Deseralize and do something with the message
+        }
+
+        private string ReceiveMessage(Socket s)
+        {
+            string buffer = "";
+            byte[] bytes = new byte[1024];
+            do
+            {
+                s.Receive(bytes);
+                buffer += Encoding.UTF8.GetString(bytes).TrimEnd('\0');
+                bytes = new byte[256];
+            } while (buffer.Substring(buffer.Length - 5) != "<EOM>");
+            return buffer.Remove(buffer.Length - 5);
         }
     }
 }
