@@ -8,6 +8,7 @@ using System.Windows;
 using TDDD49.ViewModel;
 using TDDD49.Services;
 using TDDD49.Models;
+using System.Collections.ObjectModel;
 
 namespace TDDD49
 {
@@ -23,6 +24,8 @@ namespace TDDD49
             Params.Port = 6536;
             Params.Username = "Gabriel";
             Params.IP = "0.0.0.0";
+            Params.Connections = new ObservableCollection<ConnectionModel>();
+            Params.CurrentConnection = new ConnectionModel("No current connection", "", null);
 
             MainModel _MainModel = new MainModel(Params);
 

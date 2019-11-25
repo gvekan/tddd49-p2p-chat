@@ -11,8 +11,6 @@ namespace TDDD49.Services
     {
         void StartListen();
 
-        void HandleConnection(Socket s);
-
         void Connect(string IP, string Port);
     }
 }

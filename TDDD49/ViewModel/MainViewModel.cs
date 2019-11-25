@@ -44,6 +44,10 @@ namespace TDDD49.ViewModel
                 case "Port":
                     OnPropertyChanged("UserIPAddr");
                     break;
+                case "CurrentConnection":
+                    OnPropertyChanged("CurrentChatIPAddr");
+                    OnPropertyChanged("CurrentChatName");
+                    break;
                 default:
                     OnPropertyChanged(e.PropertyName);
                     break;
@@ -72,13 +76,11 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return _CurrentChatIPAddr;
+                return Model.CurrentConnection.IPAddrPort;
             }
 
             set
             {
-                _CurrentChatIPAddr = value;
-                OnPropertyChanged("CurrentChatIpAdrr");
             }
         }
 
@@ -86,13 +88,11 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return _CurrentChatName;
+                return Model.CurrentConnection.Username;
             }
 
             set
             {
-                _CurrentChatName = value;
-                OnPropertyChanged("CurrentChatName");
             }
         }
 

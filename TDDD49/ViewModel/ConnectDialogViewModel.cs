@@ -47,7 +47,6 @@ namespace TDDD49.ViewModel
         {
             if(Port.Length > 0 && IPAddr.Length > 0)
             {
-                MessageBox.Show("Attempting connect " + Port + " " + IPAddr);
                 try
                 {
                     _ConnectAction(_IPAddr, _Port);
