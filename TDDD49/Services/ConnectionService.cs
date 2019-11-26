@@ -16,11 +16,13 @@ using System.Collections.ObjectModel;
 using TDDD49.Messages;
 using System.IO;
 using Newtonsoft.Json;
+using TDDD49.Exceptions;
 
 namespace TDDD49.Services
 { 
     public class StateObject
     {
+        public Socket WorkSocket = null;
         public const int BufferSize = 1024;
         public byte[] buffer = new byte[BufferSize];
 
@@ -35,6 +37,7 @@ namespace TDDD49.Services
         private Thread ListenThread;
         private Socket ListenSocket;
         private Socket _ConSocket = null;
+        private bool Running = true;
         private MainModel Model;
         #endregion
 
@@ -76,8 +79,8 @@ namespace TDDD49.Services
         {
             if (ListenThread != null)
             {
-                ListenThread.Abort();
-                ListenSocket.Shutdown(SocketShutdown.Both);
+                Stop();
+                Running = true;
             }
 
             IP = new IPEndPoint(IPAddress.Any, Model.Port);
@@ -87,47 +90,62 @@ namespace TDDD49.Services
 
         private void Listen()
         {
-            Socket listenSocket = new Socket(AddressFamily.InterNetwork,
+            ListenSocket = new Socket(AddressFamily.InterNetwork,
                                      SocketType.Stream,
                                      ProtocolType.Tcp);
             try
             {
-                listenSocket.Bind(this.IP);
+                ListenSocket.Bind(this.IP);
             } catch (Exception e)
             {
                 Actions.HandleBugException(e, "Something went wrong with the connection. Try changing the port.");
                 return;
             }
 
-            listenSocket.Listen(10);
-            while (true)
+            ListenSocket.Listen(10);
+            while (Running)
             {
-                Socket conSocket = listenSocket.Accept();
+                Socket s = null;
+                try
+                {
+                    s = ListenSocket.Accept();
+                } catch (SocketException e)
+                {
+                    if (Running)
+                    {
+                        Running = false;
+                        Actions.HandleBugException(e, "Something went really wrong. Try to restart the application.");
+                    }
+                    // else we created the exception when closing.
+                }
+
+                if (s == null) continue;
 
                 // TODO: Lock on ConSocket
                 if (ConSocket == null)
                 {
-                    ConSocket = conSocket;
-                    InitConnection();
+                    ConSocket = s;
+                    InitConnection(s);
                 } else
                 {
-                    conSocket.Shutdown(SocketShutdown.Both);
+                    SendAcceptDeclineMessage(s, false);
+                    s.Shutdown(SocketShutdown.Both);
                 }
             }
         }
 
         // WHen we get a connection
-        private void InitConnection()
+        private void InitConnection(Socket s)
         {
             // Read info here
-            RequestConnectMessage msg = (RequestConnectMessage)JsonConvert.DeserializeObject(ReceiveMessage(ConSocket), typeof(RequestConnectMessage));
-            string ip = ConSocket.RemoteEndPoint.ToString(); // TODO: change port to RequestConnectMessage.Port
+            RequestConnectMessage msg = (RequestConnectMessage)JsonConvert.DeserializeObject(ReceiveMessage(s), typeof(RequestConnectMessage));
+            string ip = s.RemoteEndPoint.ToString(); // TODO: change port to RequestConnectMessage.Port
             ConnectionModel cm = new ConnectionModel(ip, msg.Sender, null);
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Actions.OpenDialog(typeof(AcceptDeclineDialog),
                     new AcceptDeclineDialogViewModel(ip,
-                       msg.Sender, parameter => AcceptConnection(ConSocket, cm), parameter => DeclineConnection(ConSocket)));
+                       msg.Sender, parameter => AcceptConnection(s, cm), parameter => DeclineConnection(s)));
             });
         }
 
@@ -142,13 +160,13 @@ namespace TDDD49.Services
             SendAcceptDeclineMessage(s, true);
             // TODO: Check history and load it
             Model.CurrentConnection = cm;
-            StartRecieve();
+            StartRecieve(s);
         }
 
         public void DeclineConnection(Socket s)
         {
             SendAcceptDeclineMessage(s, false);
-            s.Shutdown(SocketShutdown.Both);
+            OnDisconnect();
         }
 
 
@@ -156,15 +174,18 @@ namespace TDDD49.Services
         public void Connect(string IP, string Port)
         {
             IPAddress IPAddr;
+            IPEndPoint ipe;
             try
             {
                 IPAddress.TryParse(IP, out IPAddr);
+                if (IPAddr == null)
+                    throw new InvalidIPException();
+                ipe = new IPEndPoint(IPAddr, Convert.ToInt32(Port));
             }
-            catch (SocketException)
+            catch (Exception ex) when(ex is SocketException || ex is ArgumentOutOfRangeException)
             {
                 throw new InvalidIPException("Connection could not be made");
             }
-            IPEndPoint ipe = new IPEndPoint(IPAddr, Convert.ToInt32(Port));
             ConSocket = new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             try
@@ -188,6 +209,12 @@ namespace TDDD49.Services
                 Console.WriteLine(e);
             }
 
+            if (!client.Connected)
+            {
+                OnDisconnect();
+                Actions.HandleBugException(new NoConnectionException(), "Other user did not accept.");
+            }
+
             RequestConnectMessage msg = new RequestConnectMessage(this.Model.Username);
             string strMsg = msg.Serialize();
             client.Send(Encoding.UTF8.GetBytes(strMsg));
@@ -196,30 +223,45 @@ namespace TDDD49.Services
             if (acceptDeclineMessage.IsAccepted)
             {
                 string ip = client.RemoteEndPoint.ToString(); // TODO: change port to RequestConnectMessage.Port
-                Model.CurrentConnection = new ConnectionModel(ip,
-                       acceptDeclineMessage.Sender, null);
-                StartRecieve();
+                Application.Current.Dispatcher.Invoke(() => Model.CurrentConnection = new ConnectionModel(ip,
+                       acceptDeclineMessage.Sender, null));
+                StartRecieve(client);
             }
             else
             {
-                client.Shutdown(SocketShutdown.Both);
+                OnDisconnect();
             }
 
         }
 
-        private void StartRecieve()
+        private void StartRecieve(Socket s)
         {
             StateObject so = new StateObject();
+            so.WorkSocket = s;
 
-            ConSocket.BeginReceive(so.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(RecieveCallback), so);
+            DoBeginRecieve(so);
+        }
+
+        private void DoBeginRecieve(StateObject so)
+        {
+            if (!so.WorkSocket.Connected) return;
+            try
+            {
+                so.WorkSocket.BeginReceive(so.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(RecieveCallback), so);
+            } catch (Exception ex) when(ex is SocketException || ex is ObjectDisposedException)
+            {
+                OnDisconnect();
+                MessageBox.Show("Other user was disconnected.");
+            }
         }
 
         private void RecieveCallback(IAsyncResult ar)
         {
             StateObject state = (StateObject)ar.AsyncState;
             string content = string.Empty;
-        
-            int bytesRead = ConSocket.EndReceive(ar);
+            if (!state.WorkSocket.Connected)
+                return;
+            int bytesRead = state.WorkSocket.EndReceive(ar);
 
             if(bytesRead > 0)
             {
@@ -239,8 +281,42 @@ namespace TDDD49.Services
                 state.sb = new StringBuilder(content);
 
             }
+            DoBeginRecieve(state);
+        }
 
-            ConSocket.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(RecieveCallback), state);
+        public void Disconnect()
+        {
+            if (ConSocket.Connected)
+                ConSocket.Send(Encoding.UTF8.GetBytes(new DisconnectMessage(Model.Username).Serialize()));
+            OnDisconnect();
+        }
+
+        private void OnDisconnect()
+        {
+            // TODO: (Not here) What if other chat party exits unexpectedly, Check socket timeout/connected
+            try
+            {
+                if(ConSocket != null && ConSocket.Connected)
+                    ConSocket.Shutdown(SocketShutdown.Both);
+            } finally
+            {
+                ConSocket.Close();
+            }
+            ConSocket = null;
+        }
+
+        public void OnExit(object sender, ExitEventArgs e)
+        {
+            Stop();
+        } 
+
+        private void Stop()
+        {
+            Running = false;
+            ListenSocket.Close();
+            if (ConSocket != null)
+                Disconnect();
+            ListenThread.Abort();
         }
 
         private void HandleMessage(string Message)
@@ -249,6 +325,10 @@ namespace TDDD49.Services
             
             if (msg.Type == "Chat")
             {
+            }
+            if(msg.Type == "Disconnect")
+            {
+                OnDisconnect();
             }
             // TODO: Deseralize and do something with the message
         }

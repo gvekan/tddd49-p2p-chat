@@ -35,6 +35,8 @@ namespace TDDD49
             MainWindow = new MainWindow();
             MainWindow.DataContext = new MainViewModel(_ConnectionService, _MainModel);
 
+            this.Exit += _ConnectionService.OnExit;
+
 
 
             MainWindow.Show();

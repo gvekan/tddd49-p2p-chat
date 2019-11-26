@@ -54,6 +54,7 @@ namespace TDDD49.Models
             set
             {
                 _Connected = value;
+                OnPropertyChanged("Connected");
             }
 
         }
