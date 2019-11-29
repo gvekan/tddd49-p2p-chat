@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using TDDD49.Helpers;
 using TDDD49.Services;
 using TDDD49.Models;
+using System.Collections.ObjectModel;
 
 namespace TDDD49.ViewModel
 {
@@ -93,6 +94,18 @@ namespace TDDD49.ViewModel
             }
         }
 
+        public IEnumerable<ConnectionItemViewModel> Connections
+        {
+            get
+            {
+                return Model.Connections.Select((cm, index) => new ConnectionItemViewModel(cm, ()=>OnConnectionSelected(index)));
+            }
+            set
+            {
+
+            }
+        }
+
 
         #endregion
 
@@ -113,6 +126,14 @@ namespace TDDD49.ViewModel
                 // TODO: Add a SettingsDialogViewModel
                 return new RelayCommand(parameter => Actions.OpenDialog(typeof(SettingsDialog), new SettingsDialogViewModel(Model)));
             }
+        }
+
+        #endregion
+
+        #region Methods
+        private void OnConnectionSelected(int i)
+        {
+            MessageBox.Show(Model.Connections[i].Username);
         }
 
         #endregion

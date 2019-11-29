@@ -25,6 +25,10 @@ namespace TDDD49
             Params.Username = "Gabriel";
             Params.IP = "0.0.0.0";
             Params.Connections = new ObservableCollection<ConnectionModel>();
+            for (int i = 0; i<10; i++)
+            {
+                Params.Connections.Add(new ConnectionModel("user" + i, "", new ObservableCollection<MessageModel>()));
+            }
             Params.CurrentConnection = new ConnectionModel("No current connection", "", null);
 
             MainModel _MainModel = new MainModel(Params);

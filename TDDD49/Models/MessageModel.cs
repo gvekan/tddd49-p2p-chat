@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace TDDD49.Models
 {
-    class MessageModel
+    abstract class MessageModel
     {
+
     }
 }
