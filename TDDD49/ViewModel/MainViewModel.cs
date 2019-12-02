@@ -21,6 +21,7 @@ namespace TDDD49.ViewModel
         #region Private Fields
         private IConnectionService _ConnectionService;
         private MainModel Model;
+        private UserControl _CurrentChatView;
         #endregion
 
 
@@ -45,11 +46,26 @@ namespace TDDD49.ViewModel
                 case "CurrentConnection":
                     OnPropertyChanged("CurrentChatIPAddr");
                     OnPropertyChanged("CurrentChatName");
+                    if (Model.CurrentConnection != null)
+                    {
+                        CreateChatView();
+                    }
+                    else
+                        CurrentChatView = null;
+                    break;
+                case "Connected":
                     break;
                 default:
                     OnPropertyChanged(e.PropertyName);
                     break;
             }
+        }
+
+        private void CreateChatView()
+        {
+            ChatView cv = new ChatView();
+            cv.DataContext = new ChatViewModel(_ConnectionService.Disconnect, param => Model.Connected);
+            CurrentChatView = cv;
         }
 
         #region Public Properties
@@ -94,6 +110,18 @@ namespace TDDD49.ViewModel
             }
         }
 
+        public UserControl CurrentChatView
+        {
+            get
+            {
+                return _CurrentChatView;
+            }
+            set
+            {
+                _CurrentChatView = value;
+                OnPropertyChanged("CurrentChatView");
+            }
+        }
         public IEnumerable<ConnectionItemViewModel> Connections
         {
             get

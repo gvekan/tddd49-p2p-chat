@@ -68,5 +68,8 @@
         </Grid>
 
         <!--ContentControl/-->
+        <ContentControl Grid.Column="1" Content="{Binding CurrentChatView}">
+            
+        </ContentControl>
     </Grid>
 </Window>

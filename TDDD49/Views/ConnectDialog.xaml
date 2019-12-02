@@ -12,9 +12,9 @@
 
         <!-- Form -->
         <Label Content="IP" VerticalAlignment="Bottom"/>
-        <TextBox Margin="5,0" Text="{Binding IPAddr}"/>
+        <TextBox Margin="5,0" Text="{Binding IPAddr, UpdateSourceTrigger=PropertyChanged}"/>
         <Label Grid.Column="1" Content="Port" VerticalAlignment="Bottom"/>
-        <TextBox Margin="5,0, 5, 10" Text="{Binding Port}"/>
+        <TextBox Margin="5,0, 5, 10" Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"/>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5">
             <Button Content="Connect" Width="50" IsDefault="True" Margin="0,0,5,0" Command="{Binding ConnectCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
             <Button Name="cancelButton" Width="50" IsCancel="True">Cancel</Button>
