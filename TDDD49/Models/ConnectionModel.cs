@@ -12,22 +12,28 @@ namespace TDDD49.Models
 {
     class ConnectionModel : NotifyPropertyChangedBase
     {
-        private Thread _Thread;
-
-        private Socket _Socket;
         private string _Username;
         private string _IPAddrPort;
 
         // TODO: Use lock
-        public ObservableCollection<MessageModel> Messages;
+        public ObservableCollection<MessageModel> Messages = new ObservableCollection<MessageModel>();
 
-        public ConnectionModel(string Username, string IPAddrPort, ObservableCollection<MessageModel> Messages, Thread t = null, Socket s = null)
+        public ConnectionModel(string Username, string IPAddrPort, ObservableCollection<MessageModel> Messages = null)
         {
             this.Username = Username;
             this.IPAddrPort = IPAddrPort;
-            this.Socket = s;
 
-            this._Thread = t;
+            if (Messages != null)
+            {
+                Messages.Count();
+                this.Messages = Messages;
+            }
+            this.Messages.CollectionChanged += Messages_CollectionChanged;
+        }
+
+        private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("Messages");
         }
 
         public string Username
@@ -55,20 +61,6 @@ namespace TDDD49.Models
             {
                 _IPAddrPort = value;
                 OnPropertyChanged("IPAddrPort");
-            }
-        }
-
-        public Socket Socket
-        {
-            get
-            {
-                return _Socket;
-            }
-
-            set
-            {
-                _Socket = value;
-                OnPropertyChanged("Socket");
             }
         }
     }

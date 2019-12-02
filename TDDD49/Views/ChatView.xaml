@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TDDD49.Views"
+             xmlns:m="clr-namespace:TDDD49.Models"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -19,9 +20,16 @@
 
         <!-- Messages -->
         <ScrollViewer Grid.Row="1">
-            <StackPanel>
-
-            </StackPanel>
+            <ItemsControl ItemsSource="{Binding Messages}">
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type m:TextMessageModel}">
+                        <local:TextMessageView DataContext="{Binding }"/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type m:ImageMessageModel}">
+                        <local:ImageMessageView DataContext="{Binding }"/>
+                    </DataTemplate>
+                </ItemsControl.Resources>
+            </ItemsControl>
         </ScrollViewer>
 
         <!-- Message creator -->

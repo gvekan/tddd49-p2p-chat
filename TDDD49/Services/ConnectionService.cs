@@ -140,7 +140,7 @@ namespace TDDD49.Services
             // Read info here
             RequestConnectMessage msg = (RequestConnectMessage)JsonConvert.DeserializeObject(ReceiveMessage(s), typeof(RequestConnectMessage));
             string ip = s.RemoteEndPoint.ToString(); // TODO: change port to RequestConnectMessage.Port
-            ConnectionModel cm = new ConnectionModel(ip, msg.Sender, null);
+            ConnectionModel cm = new ConnectionModel(ip, msg.Sender);
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Actions.OpenDialog(typeof(AcceptDeclineDialog),
@@ -212,7 +212,7 @@ namespace TDDD49.Services
             if (!client.Connected)
             {
                 OnDisconnect();
-                Actions.HandleBugException(new NoConnectionException(), "Other user did not accept.");
+                Actions.HandleBugException(new NoConnectionException(), "Could not establish connection.");
             }
 
             RequestConnectMessage msg = new RequestConnectMessage(this.Model.Username);
@@ -224,12 +224,13 @@ namespace TDDD49.Services
             {
                 string ip = client.RemoteEndPoint.ToString(); // TODO: change port to RequestConnectMessage.Port
                 Application.Current.Dispatcher.Invoke(() => Model.CurrentConnection = new ConnectionModel(ip,
-                       acceptDeclineMessage.Sender, null));
+                       acceptDeclineMessage.Sender));
                 StartRecieve(client);
             }
             else
             {
                 OnDisconnect();
+                Actions.HandleBugException(new NoConnectionException(), "Other user did not accept.");
             }
 
         }

@@ -31,9 +31,7 @@ namespace TDDD49.ViewModel
             this.Model = Model;
             Model.PropertyChanged += Model_PropertyChanged;
 
-
-            CurrentChatName = "My Friends Dummy Name";
-            CurrentChatIPAddr = "No connection";
+            CreateChatView(); //TODO: Only if currentchat
         }
 
         private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -64,7 +62,7 @@ namespace TDDD49.ViewModel
         private void CreateChatView()
         {
             ChatView cv = new ChatView();
-            cv.DataContext = new ChatViewModel(_ConnectionService.Disconnect, param => Model.Connected);
+            cv.DataContext = new ChatViewModel(_ConnectionService.Disconnect, param => Model.Connected, Model.CurrentConnection);
             CurrentChatView = cv;
         }
 

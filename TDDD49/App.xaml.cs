@@ -27,9 +27,17 @@ namespace TDDD49
             Params.Connections = new ObservableCollection<ConnectionModel>();
             for (int i = 0; i<10; i++)
             {
-                Params.Connections.Add(new ConnectionModel("user" + i, "", new ObservableCollection<MessageModel>()));
+                Params.Connections.Add(new ConnectionModel("user" + i, ""));
             }
-            Params.CurrentConnection = new ConnectionModel("No current connection", "", null);
+
+            ObservableCollection<MessageModel> messages = new ObservableCollection<MessageModel>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                messages.Add(new TextMessageModel("Message " + i, i%2==0));
+            }
+
+            Params.CurrentConnection = new ConnectionModel("No current connection", "", messages);
 
             MainModel _MainModel = new MainModel(Params);
 

@@ -26,6 +26,12 @@ namespace TDDD49.Models
         {
             _CurrentConnection = Params.CurrentConnection;
             Connections = Params.Connections;
+            Connections.CollectionChanged += Connections_CollectionChanged;
+        }
+
+        private void Connections_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("Connections");
         }
 
         #region Properties

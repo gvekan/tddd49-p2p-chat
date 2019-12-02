@@ -6,20 +6,18 @@ using System.Threading.Tasks;
 
 namespace TDDD49.Models
 {
-    abstract class MessageModel
-    { 
-        public MessageModel(bool _IsSender) 
+    class TextMessageModel : MessageModel
+    {
+
+        public TextMessageModel(string _Text, bool IsSender) : base(IsSender)
         {
-            IsSender = _IsSender;
+            Text = _Text;
         }
 
-        public bool IsSender
+        public string Text
         {
             get;
             set;
         }
-
     }
-
-
 }

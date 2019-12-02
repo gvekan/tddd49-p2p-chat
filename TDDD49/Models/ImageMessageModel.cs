@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TDDD49.ViewModel
+namespace TDDD49.Models
 {
-    class CurrentConnectionItemViewModel
+    class ImageMessageModel
     {
-
     }
 }
