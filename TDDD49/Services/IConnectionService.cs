@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Windows;
+using TDDD49.Models;
 
 namespace TDDD49.Services
 {
@@ -17,5 +18,7 @@ namespace TDDD49.Services
         void Disconnect();
 
         void OnExit(object sender, ExitEventArgs e);
+
+        void Send(MessageModel Message);
     }
 }

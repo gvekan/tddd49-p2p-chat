@@ -12,8 +12,13 @@
     </UserControl.Resources>
     <Grid Style="{Binding IsSender, Converter={StaticResource IsSenderConverter}}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="{Binding Text, Mode=OneTime}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock TextWrapping="Wrap" Text="{Binding Text, Mode=OneTime}"/>
+        <TextBlock TextAlignment="Right" Grid.Row="2" Text="{Binding StatusMessage}"/>
     </Grid>
 </UserControl>

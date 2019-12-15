@@ -8,12 +8,12 @@ namespace TDDD49.Messages
 {
     class AcceptDeclineMessage : MessageBase
     {
-        public AcceptDeclineMessage(Boolean IsAccepted, string Sender) : base("", Sender, "AcceptDecline")
+        public AcceptDeclineMessage(bool IsAccepted, string Sender, Guid id) : base(Sender, id, "AcceptDecline")
         {
             this.IsAccepted = IsAccepted;
         }
 
-        public Boolean IsAccepted
+        public bool IsAccepted
         {
             get; set;
         }

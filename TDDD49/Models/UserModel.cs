@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,8 @@ namespace TDDD49.Models
         private string _IP;
         #endregion
 
+        public Guid id;
+
         public UserModel(UserModelParams Params)
         {
             IP = Params.IP;
@@ -33,6 +36,7 @@ namespace TDDD49.Models
 
         #region Properties
 
+        [JsonIgnore]
         public string IP
         {
             get

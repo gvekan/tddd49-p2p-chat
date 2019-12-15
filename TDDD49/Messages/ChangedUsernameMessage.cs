@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace TDDD49.Messages
 {
-    class DisconnectMessage : MessageBase
+    class ChangedUsernameMessage : MessageBase
     {
-        public DisconnectMessage(string Sender, Guid id) : base(Sender, id, "Disconnect")
+        public ChangedUsernameMessage(string Sender, Guid id) : base(Sender, id, "ChangedUsername")
         {
-
         }
     }
 }

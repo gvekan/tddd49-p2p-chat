@@ -9,19 +9,21 @@ namespace TDDD49.Messages
 {
     class MessageBase
     {
-        public MessageBase(string Message, string Sender, string Type = "Chat")
+        public MessageBase(string Sender, Guid id, string Type = "Chat")
         {
             this.Type = Type;
-            this.Message = Message;
             this.Sender = Sender;
+            this.id = id;
         }
         public string Type
         {
             get; set;
         }
-        public string Message
+
+        public Guid id
         {
-            get; set;
+            get;
+            set;
         }
 
         public string Sender
@@ -36,7 +38,7 @@ namespace TDDD49.Messages
         public string Serialize()
         {
             JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.TypeNameHandling = TypeNameHandling.Auto;
+            settings.TypeNameHandling = TypeNameHandling.All;
             settings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
             return JsonConvert.SerializeObject(this, this.GetType(), settings) + "<EOM>";
         }

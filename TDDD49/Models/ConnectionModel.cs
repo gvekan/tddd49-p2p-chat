@@ -14,14 +14,16 @@ namespace TDDD49.Models
     {
         private string _Username;
         private string _IPAddrPort;
+        public Guid id;
 
         // TODO: Use lock
-        public ObservableCollection<MessageModel> Messages = new ObservableCollection<MessageModel>();
+        public MessageObservableCollection Messages = new MessageObservableCollection();
 
-        public ConnectionModel(string Username, string IPAddrPort, ObservableCollection<MessageModel> Messages = null)
+        public ConnectionModel(Guid id, string Username, string IPAddrPort, MessageObservableCollection Messages = null)
         {
             this.Username = Username;
             this.IPAddrPort = IPAddrPort;
+            this.id = id;
 
             if (Messages != null)
             {
@@ -61,6 +63,23 @@ namespace TDDD49.Models
             {
                 _IPAddrPort = value;
                 OnPropertyChanged("IPAddrPort");
+            }
+        }
+
+        public class MessageObservableCollection : ObservableCollection<MessageModel>
+        {
+            public new void Add(MessageModel message)
+            {
+                
+                base.Add(message);
+                message.PropertyChanged += Message_PropertyChanged;
+                
+                
+            }
+
+            private void Message_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+            {
+                OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(System.Collections.Specialized.NotifyCollectionChangedAction.Reset));
             }
         }
     }

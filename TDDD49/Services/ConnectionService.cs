@@ -20,13 +20,21 @@ using TDDD49.Exceptions;
 
 namespace TDDD49.Services
 { 
-    public class StateObject
+    public class RecieveStateObject
     {
         public Socket WorkSocket = null;
         public const int BufferSize = 1024;
         public byte[] buffer = new byte[BufferSize];
 
         public StringBuilder sb = new StringBuilder();
+
+    }
+
+    public class SendStateObject
+    {
+        public Socket WorkSocket = null;
+        public object extra = null;
+        public int MessageLength = -1;
 
     }
 
@@ -39,12 +47,14 @@ namespace TDDD49.Services
         private Socket _ConSocket = null;
         private bool Running = true;
         private MainModel Model;
+        private DataService DataService;
         #endregion
 
-        public ConnectionService(MainModel Model)
+        public ConnectionService(MainModel Model, DataService dataService)
         {
             // TODO: Set message
             this.Model = Model;
+            DataService = dataService;
             Model.PropertyChanged += Model_PropertyChanged;
             StartListen();
         }
@@ -70,7 +80,7 @@ namespace TDDD49.Services
                     StartListen();
                     break;
                 case "Username":
-                    // TODO: Send alert
+                    NotifyUsernameChanged();
                     break;
             }
         }
@@ -140,27 +150,46 @@ namespace TDDD49.Services
             // Read info here
             RequestConnectMessage msg = (RequestConnectMessage)JsonConvert.DeserializeObject(ReceiveMessage(s), typeof(RequestConnectMessage));
             string ip = s.RemoteEndPoint.ToString(); // TODO: change port to RequestConnectMessage.Port
-            ConnectionModel cm = new ConnectionModel(ip, msg.Sender);
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Actions.OpenDialog(typeof(AcceptDeclineDialog),
                     new AcceptDeclineDialogViewModel(ip,
-                       msg.Sender, parameter => AcceptConnection(s, cm), parameter => DeclineConnection(s)));
+                       msg.Sender, parameter => AcceptConnection(s, msg.id, msg.Sender, ip), parameter => DeclineConnection(s)));
             });
         }
 
         private void SendAcceptDeclineMessage(Socket s, bool IsAccepted)
         {
-            AcceptDeclineMessage msg = new AcceptDeclineMessage(IsAccepted, this.Model.Username);
+            AcceptDeclineMessage msg = new AcceptDeclineMessage(IsAccepted, this.Model.Username, this.Model.id);
             s.Send(Encoding.UTF8.GetBytes(msg.Serialize()));
         }
 
-        public void AcceptConnection(Socket s, ConnectionModel cm)
+        public void AcceptConnection(Socket s, Guid id, string Username, string IPAddrPort)
         {
             SendAcceptDeclineMessage(s, true);
             // TODO: Check history and load it
-            Model.CurrentConnection = cm;
+
+            setCurrentConnection(id, Username, IPAddrPort);
             StartRecieve(s);
+        }
+
+        private void setCurrentConnection(Guid id, string Username, string IPAddrPort)
+        {
+            ConnectionModel cm = DataService.getConnection(id);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Model.ConnectedGuid = id;
+                if (cm == null)
+                {
+                    cm = DataService.newConnection(id, Username, IPAddrPort);
+                }
+                else
+                {
+                    cm.Username = Username;
+                    cm.IPAddrPort = IPAddrPort;
+                }
+                Model.CurrentConnection = cm;
+            });
         }
 
         public void DeclineConnection(Socket s)
@@ -215,7 +244,7 @@ namespace TDDD49.Services
                 Actions.HandleBugException(new NoConnectionException(), "Could not establish connection.");
             }
 
-            RequestConnectMessage msg = new RequestConnectMessage(this.Model.Username);
+            RequestConnectMessage msg = new RequestConnectMessage(this.Model.Username, this.Model.id);
             string strMsg = msg.Serialize();
             client.Send(Encoding.UTF8.GetBytes(strMsg));
 
@@ -223,8 +252,7 @@ namespace TDDD49.Services
             if (acceptDeclineMessage.IsAccepted)
             {
                 string ip = client.RemoteEndPoint.ToString(); // TODO: change port to RequestConnectMessage.Port
-                Application.Current.Dispatcher.Invoke(() => Model.CurrentConnection = new ConnectionModel(ip,
-                       acceptDeclineMessage.Sender));
+                setCurrentConnection(acceptDeclineMessage.id, acceptDeclineMessage.Sender, ip);
                 StartRecieve(client);
             }
             else
@@ -237,18 +265,18 @@ namespace TDDD49.Services
 
         private void StartRecieve(Socket s)
         {
-            StateObject so = new StateObject();
+            RecieveStateObject so = new RecieveStateObject();
             so.WorkSocket = s;
 
             DoBeginRecieve(so);
         }
 
-        private void DoBeginRecieve(StateObject so)
+        private void DoBeginRecieve(RecieveStateObject so)
         {
             if (!so.WorkSocket.Connected) return;
             try
             {
-                so.WorkSocket.BeginReceive(so.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(RecieveCallback), so);
+                so.WorkSocket.BeginReceive(so.buffer, 0, RecieveStateObject.BufferSize, 0, new AsyncCallback(RecieveCallback), so);
             } catch (Exception ex) when(ex is SocketException || ex is ObjectDisposedException)
             {
                 OnDisconnect();
@@ -258,7 +286,7 @@ namespace TDDD49.Services
 
         private void RecieveCallback(IAsyncResult ar)
         {
-            StateObject state = (StateObject)ar.AsyncState;
+            RecieveStateObject state = (RecieveStateObject)ar.AsyncState;
             string content = string.Empty;
             if (!state.WorkSocket.Connected)
                 return;
@@ -274,7 +302,7 @@ namespace TDDD49.Services
                     String message = content.Substring(0, indexOfEOM); // Ignores EOM
                     HandleMessage(message);
 
-                    content = content.Substring(indexOfEOM + 4); // Ignores EOM
+                    content = content.Substring(indexOfEOM + 5); // Ignores EOM
 
 
                     indexOfEOM = content.IndexOf("<EOM>");
@@ -285,10 +313,71 @@ namespace TDDD49.Services
             DoBeginRecieve(state);
         }
 
+        public void Send(MessageModel Message)
+        {
+            SendStateObject state = new SendStateObject();
+            state.WorkSocket = _ConSocket;
+            state.extra = Message;
+         
+            MessageBase sendMessage = null;
+            if (Message is TextMessageModel)
+                sendMessage = new TextChatMessage((TextMessageModel)Message, Model.Username, Model.id);
+            else if (Message is ImageMessageModel)
+                sendMessage = new ImageChatMessage((ImageMessageModel)Message, Model.Username, Model.id);
+
+            byte[] byteMessage = Encoding.UTF8.GetBytes(sendMessage.Serialize());
+            state.MessageLength = byteMessage.Length;
+            try
+            {
+                state.WorkSocket.BeginSend(byteMessage, 0, state.MessageLength, SocketFlags.None, SendCallback, state);
+            }
+            catch (Exception ex) when (ex is SocketException || ex is NullReferenceException)
+            {
+                throw new NoConnectionException();
+            }
+        }
+        
+        public void SendCallback(IAsyncResult ar)
+        {
+            // TODO: Change tstaus to not sent 
+            SendStateObject so = (SendStateObject)ar.AsyncState;
+            MessageModel messageModel = so.extra as MessageModel;
+            string StatusMessage = "";
+
+            if(messageModel == null)
+            {
+                return;
+            }
+            if (!so.WorkSocket.Connected)
+            {
+                StatusMessage = "Not delivered";
+            }
+            else {
+                int bytesSent = so.WorkSocket.EndSend(ar);
+                if (bytesSent == so.MessageLength)
+                {
+                    StatusMessage = "Delivered";
+                } else
+                {
+                    StatusMessage = "Not delivered";
+                }
+            }
+
+            Application.Current.Dispatcher.Invoke(() => messageModel.StatusMessage = StatusMessage);
+        }
+
+        public void NotifyUsernameChanged()
+        {            
+            if (ConSocket != null && ConSocket.Connected)
+            {
+                new Task(() => ConSocket.Send(Encoding.UTF8.GetBytes(new ChangedUsernameMessage(Model.Username, Model.id).Serialize()))).Start();
+            }
+        }
+
         public void Disconnect()
         {
             if (ConSocket.Connected)
-                ConSocket.Send(Encoding.UTF8.GetBytes(new DisconnectMessage(Model.Username).Serialize()));
+                ConSocket.Send(Encoding.UTF8.GetBytes(new DisconnectMessage(Model.Username, Model.id).Serialize()));
             OnDisconnect();
         }
 
@@ -304,6 +393,7 @@ namespace TDDD49.Services
                 ConSocket.Close();
             }
             ConSocket = null;
+            Model.ConnectedGuid = Guid.Empty;
         }
 
         public void OnExit(object sender, ExitEventArgs e)
@@ -322,14 +412,31 @@ namespace TDDD49.Services
 
         private void HandleMessage(string Message)
         {
-            dynamic msg = JsonConvert.DeserializeObject(Message);
+            MessageBase msg = JsonConvert.DeserializeObject<MessageBase>(Message, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
             
-            if (msg.Type == "Chat")
+            switch(msg.Type)
             {
-            }
-            if(msg.Type == "Disconnect")
-            {
-                OnDisconnect();
+                case "TextChat":
+                    Application.Current.Dispatcher.Invoke(() =>
+                        Model.CurrentConnection.Messages.Add(new TextMessageModel(((TextChatMessage)msg).Message, false))
+                    );
+                    break;
+                case "ImageChat":
+                    break;
+                case "Disconnect":
+                    OnDisconnect();
+                    break;
+                case "ChangedUsername":
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Model.CurrentConnection.Username = ((ChangedUsernameMessage)msg).Sender;
+                    });
+                    break;
+                default:
+                    return;
             }
             // TODO: Deseralize and do something with the message
         }

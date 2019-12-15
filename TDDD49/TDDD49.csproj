@@ -65,9 +65,12 @@
     <Compile Include="Helpers\IsSenderToStyleConverter.cs" />
     <Compile Include="Helpers\NotifyPropertyChangedBase.cs" />
     <Compile Include="Messages\AcceptDeclineMessage.cs" />
+    <Compile Include="Messages\ChangedUsernameMessage.cs" />
     <Compile Include="Messages\DisconnectMessage.cs" />
+    <Compile Include="Messages\ImageChatMessage.cs" />
     <Compile Include="Messages\MessageBase.cs" />
     <Compile Include="Messages\RequestConnectMessage.cs" />
+    <Compile Include="Messages\TextChatMessage.cs" />
     <Compile Include="Models\ConnectionModel.cs" />
     <Compile Include="Models\ImageMessageModel.cs" />
     <Compile Include="Models\MainModel.cs" />
@@ -77,6 +80,7 @@
     <Compile Include="Services\ConnectionService.cs" />
     <Compile Include="Helpers\Actions.cs" />
     <Compile Include="Exceptions\InvalidIPException.cs" />
+    <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\IConnectionService.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="ViewModel\ChatViewModel.cs" />

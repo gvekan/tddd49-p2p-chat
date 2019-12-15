@@ -18,8 +18,8 @@ namespace TDDD49.Models
 
         private ConnectionModel _CurrentConnection;
         private bool _Connected;
+        //private Guid _ConnectedGuid;
 
-        // TODO: Use lock
         public ObservableCollection<ConnectionModel> Connections;
 
         public MainModel(MainModelParams Params) : base(Params)
@@ -46,9 +46,17 @@ namespace TDDD49.Models
             set
             {
                 // TODO: Move current connection to connections list
+                _CurrentConnection.PropertyChanged -= _CurrentConnection_PropertyChanged;
                 _CurrentConnection = value;
+                _CurrentConnection.PropertyChanged += _CurrentConnection_PropertyChanged;
                 OnPropertyChanged("CurrentConnection");
             }
+        }
+
+        private void _CurrentConnection_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Username")
+                OnPropertyChanged("CurrentConnection");
         }
 
         public bool Connected
@@ -63,6 +71,12 @@ namespace TDDD49.Models
                 OnPropertyChanged("Connected");
             }
 
+        }
+
+        public Guid ConnectedGuid
+        {
+            get;
+            set;
         }
 
         #endregion

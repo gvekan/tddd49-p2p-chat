@@ -20,6 +20,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
@@ -55,7 +56,8 @@
             </StackPanel>
 
             <Border BorderBrush="{StaticResource PrimaryBorderBrush}" Grid.Row="2" BorderThickness="0,0,2,0"/>
-            <ScrollViewer Grid.Row="2" Margin="0,0,2,0">
+            <TextBox Grid.Row="2" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+            <ScrollViewer Grid.Row="3" Margin="0,0,2,0">
                 <ItemsControl ItemsSource="{Binding Connections}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>

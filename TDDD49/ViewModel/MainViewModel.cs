@@ -22,6 +22,7 @@ namespace TDDD49.ViewModel
         private IConnectionService _ConnectionService;
         private MainModel Model;
         private UserControl _CurrentChatView;
+        private string _SearchText = "";
         #endregion
 
 
@@ -62,7 +63,7 @@ namespace TDDD49.ViewModel
         private void CreateChatView()
         {
             ChatView cv = new ChatView();
-            cv.DataContext = new ChatViewModel(_ConnectionService.Disconnect, param => Model.Connected, Model.CurrentConnection);
+            cv.DataContext = new ChatViewModel(_ConnectionService.Disconnect, _ConnectionService.Send, param => Model.Connected && Model.ConnectedGuid == Model.CurrentConnection.id, Model.CurrentConnection);
             CurrentChatView = cv;
         }
 
@@ -108,6 +109,19 @@ namespace TDDD49.ViewModel
             }
         }
 
+        public string SearchText
+        {
+            get
+            {
+                return _SearchText;
+            }
+            set
+            {
+                _SearchText = value;
+                OnPropertyChanged("Connections");
+            }
+        }
+
         public UserControl CurrentChatView
         {
             get
@@ -124,7 +138,7 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return Model.Connections.Select((cm, index) => new ConnectionItemViewModel(cm, ()=>OnConnectionSelected(index)));
+                return Model.Connections.Select((cm, index) => new ConnectionItemViewModel(cm, ()=>OnConnectionSelected(index))).Where((x) => x.Username.Contains(SearchText));
             }
             set
             {
@@ -159,7 +173,7 @@ namespace TDDD49.ViewModel
         #region Methods
         private void OnConnectionSelected(int i)
         {
-            MessageBox.Show(Model.Connections[i].Username);
+            Model.CurrentConnection = Model.Connections[i];
         }
 
         #endregion

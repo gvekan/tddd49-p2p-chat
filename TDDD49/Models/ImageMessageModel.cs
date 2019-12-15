@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace TDDD49.Models
 {
-    class ImageMessageModel
+    class ImageMessageModel : MessageModel
     {
+        public ImageMessageModel(bool _IsSender) : base(_IsSender)
+        {
+        }
     }
 }

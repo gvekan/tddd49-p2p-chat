@@ -18,31 +18,29 @@ namespace TDDD49
     public partial class App : Application
     {
         void AppStartup(object Sender, StartupEventArgs e)
-        { 
+        {
 
-            MainModel.MainModelParams Params = new MainModel.MainModelParams();
-            Params.Port = 6536;
-            Params.Username = "Gabriel";
-            Params.IP = "0.0.0.0";
-            Params.Connections = new ObservableCollection<ConnectionModel>();
-            for (int i = 0; i<10; i++)
+            DataService dataService = new DataService();
+
+
+            /*
+                        for (int i = 0; i < 10; i++)
             {
-                Params.Connections.Add(new ConnectionModel("user" + i, ""));
+                Params.Connections.Add(new ConnectionModel(Guid.Empty, "user" + i, ""));
             }
 
             ObservableCollection<MessageModel> messages = new ObservableCollection<MessageModel>();
 
             for (int i = 0; i < 10; i++)
             {
-                messages.Add(new TextMessageModel("Message " + i, i%2==0));
+                messages.Add(new TextMessageModel("Message " + i, i % 2 == 0));
             }
+             **/
 
-            Params.CurrentConnection = new ConnectionModel("No current connection", "", messages);
-
-            MainModel _MainModel = new MainModel(Params);
+            MainModel _MainModel = dataService.Model;
 
 
-            ConnectionService _ConnectionService = new ConnectionService(_MainModel);
+            ConnectionService _ConnectionService = new ConnectionService(_MainModel, dataService);
 
             MainWindow = new MainWindow();
             MainWindow.DataContext = new MainViewModel(_ConnectionService, _MainModel);

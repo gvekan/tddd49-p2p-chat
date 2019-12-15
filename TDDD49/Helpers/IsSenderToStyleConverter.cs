@@ -17,7 +17,7 @@ namespace TDDD49.Helpers
         {
             Style style = new Style(typeof(Grid));
             bool IsSender = (bool)value;
-            Brush brush = IsSender ? Brushes.Blue : Brushes.Green;
+            Brush brush = IsSender ? Brushes.LightGray : Brushes.LightBlue;
             style.Setters.Add(new Setter(Grid.BackgroundProperty, brush));
             return style;
         }
