@@ -242,6 +242,7 @@ namespace TDDD49.Services
             {
                 OnDisconnect();
                 Actions.HandleBugException(new NoConnectionException(), "Could not establish connection.");
+                return;
             }
 
             RequestConnectMessage msg = new RequestConnectMessage(this.Model.Username, this.Model.id);

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using TDDD49.Models;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace TDDD49.Services
 {
@@ -24,7 +25,9 @@ namespace TDDD49.Services
             MainModel.MainModelParams Params = new MainModel.MainModelParams();
             Params.Port = 6536;
             Params.Username = "username";
-            Params.IP = "0.0.0.0";
+            string hostName = Dns.GetHostName(); 
+            Params.IP = Dns.GetHostByName(hostName).AddressList[0].ToString(); // Private ip
+
             Params.Connections = new ObservableCollection<ConnectionModel>();
 
 
