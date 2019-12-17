@@ -83,10 +83,10 @@ namespace TDDD49.ViewModel
         }
 
         public ICommand ImageCommand
-        {
+        {0§
             get
             {
-                return new RelayCommand(SendImageMessage);
+                return new RelayCommand(SendImageMessage, param => CanExecute(param));
             }
         }
 
