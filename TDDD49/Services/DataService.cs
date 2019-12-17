@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using TDDD49.Models;
 using Newtonsoft.Json;
+using System.Windows;
 
 namespace TDDD49.Services
 {
@@ -136,10 +137,13 @@ namespace TDDD49.Services
             {
                 lock (cm)
                 {
-                    File.WriteAllText(PATH + "/" + cm.id, JsonConvert.SerializeObject(cm, new JsonSerializerSettings
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        TypeNameHandling = TypeNameHandling.All
-                    }));
+                        File.WriteAllText(PATH + "/" + cm.id, JsonConvert.SerializeObject(cm, new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.All
+                        }));
+                    });
                 }
             }).Start();
         }

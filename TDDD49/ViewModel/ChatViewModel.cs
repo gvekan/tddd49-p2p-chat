@@ -1,11 +1,15 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using TDDD49.Commands;
 using TDDD49.Exceptions;
 using TDDD49.Helpers;
@@ -17,6 +21,7 @@ namespace TDDD49.ViewModel
     {
         private Action DisconnectAction;
         private Action<MessageModel> SendAction;
+        private Action<MessageModel> ImageAction;
         private Func<object, bool> CanExecute;
         private ConnectionModel Model;
         private string _TextMessage;
@@ -74,6 +79,53 @@ namespace TDDD49.ViewModel
             get
             {
                 return new RelayCommand(SendTextMessage, param => !string.IsNullOrWhiteSpace(TextMessage) && CanExecute(param));
+            }
+        }
+
+        public ICommand ImageCommand
+        {
+            get
+            {
+                return new RelayCommand(SendImageMessage);
+            }
+        }
+
+        private void SendImageMessage(object param)
+        {
+            string imagePath = null;
+            BitmapImage img = null;
+            Application.Current.Dispatcher.Invoke(() =>
+               {
+                   OpenFileDialog openFileDialog = new OpenFileDialog();
+                   openFileDialog.Title = "Select image to send";
+                   openFileDialog.Filter = "JPEG Files|*.jpeg";
+                   Nullable<bool> res = openFileDialog.ShowDialog();
+                   if (res == true)
+                   {
+                       imagePath = openFileDialog.FileName;
+                   }
+               });
+            if(String.IsNullOrWhiteSpace(imagePath))
+            {
+                return;
+            }
+            img = new BitmapImage(new Uri(imagePath));
+            
+            MessageModel message = new ImageMessageModel(img, true);
+            message.StatusMessage = "Pending";
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Model.Messages.Add(message);
+            });
+
+            try
+            {
+                SendAction(message);
+            }
+            catch (NoConnectionException e)
+            {
+                message.StatusMessage = "Not delivered";
             }
         }
 

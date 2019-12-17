@@ -19,7 +19,8 @@ using Newtonsoft.Json;
 using TDDD49.Exceptions;
 
 namespace TDDD49.Services
-{ 
+{
+    #region Socket state objects
     public class RecieveStateObject
     {
         public Socket WorkSocket = null;
@@ -37,6 +38,7 @@ namespace TDDD49.Services
         public int MessageLength = -1;
 
     }
+    #endregion
 
     class ConnectionService : IConnectionService
     {
@@ -59,6 +61,8 @@ namespace TDDD49.Services
             StartListen();
         }
 
+        #region Properties
+
         public Socket ConSocket
         {
             get
@@ -71,6 +75,7 @@ namespace TDDD49.Services
                 _ConSocket = value;
             }
         }
+        #endregion
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -425,6 +430,9 @@ namespace TDDD49.Services
                     );
                     break;
                 case "ImageChat":
+                    Application.Current.Dispatcher.Invoke(() =>
+                        Model.CurrentConnection.Messages.Add(new ImageMessageModel(((ImageChatMessage)msg).Image, false))
+                    );
                     break;
                 case "Disconnect":
                     OnDisconnect();

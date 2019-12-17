@@ -3,10 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:h="clr-namespace:TDDD49.Helpers"
              xmlns:local="clr-namespace:TDDD49.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+    <UserControl.Resources>
+        <h:IsSenderToStyleConverter x:Key="IsSenderConverter"/>
+    </UserControl.Resources>
+    <Grid Style="{Binding IsSender, Converter={StaticResource IsSenderConverter}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Image Stretch="Uniform" StretchDirection="DownOnly" Source="{Binding Image, Mode=OneTime}"/>
+        <TextBlock TextAlignment="Right" Grid.Row="2" Text="{Binding StatusMessage}"/>
     </Grid>
 </UserControl>
