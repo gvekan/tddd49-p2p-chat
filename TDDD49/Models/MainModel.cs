@@ -45,7 +45,6 @@ namespace TDDD49.Models
 
             set
             {
-                // TODO: Move current connection to connections list
                 _CurrentConnection.PropertyChanged -= _CurrentConnection_PropertyChanged;
                 _CurrentConnection = value;
                 _CurrentConnection.PropertyChanged += _CurrentConnection_PropertyChanged;

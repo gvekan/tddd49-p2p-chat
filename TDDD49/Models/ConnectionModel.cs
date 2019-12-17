@@ -16,7 +16,6 @@ namespace TDDD49.Models
         private string _IPAddrPort;
         public Guid id;
 
-        // TODO: Use lock
         public MessageObservableCollection Messages = new MessageObservableCollection();
 
         public ConnectionModel(Guid id, string Username, string IPAddrPort, MessageObservableCollection Messages = null)
@@ -35,7 +34,14 @@ namespace TDDD49.Models
 
         private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            this.LastMessage = DateTime.Now;
             OnPropertyChanged("Messages");
+        }
+
+        public DateTime LastMessage
+        {
+            get;
+            set;
         }
 
         public string Username

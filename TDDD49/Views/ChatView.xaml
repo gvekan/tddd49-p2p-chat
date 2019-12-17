@@ -15,7 +15,12 @@
         </Grid.RowDefinitions>
 
         <Grid Background="{StaticResource DarkSecondaryBrush}">
-            <Button HorizontalAlignment="Center" Content="Disconnect" Command="{Binding DisconnectCommand}"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button HorizontalAlignment="Center" Content="Disconnect" Command="{Binding DisconnectCommand}" Grid.Column="0"/>
+            <Button HorizontalAlignment="Center" Content="Buzz" Command="{Binding BuzzCommand}" Grid.Column="1"/>
         </Grid>
 
         <!-- Messages -->
@@ -49,7 +54,7 @@
             <Button Grid.Column="1" Width="36" Height="36" Command="{Binding SendCommand}">
                 Send
             </Button>
-            <Button Grid.Row="1" Grid.Column="1" Width="36" Height="36" Command="{Binding ImageCommand}">
+            <Button Grid.Row="1" Grid.Column="1" Width="36" Height="36" Command="{Binding ImageCommand}" Margin="10,4,10,10">
                 Image
             </Button>
         </Grid>

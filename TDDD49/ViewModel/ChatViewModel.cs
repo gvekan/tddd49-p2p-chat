@@ -74,6 +74,14 @@ namespace TDDD49.ViewModel
             }
         }
 
+        public ICommand BuzzCommand
+        {
+            get
+            {
+                return new RelayCommand(Buzz, param => CanExecute(param));
+            }
+        }
+
         public ICommand SendCommand
         {
             get
@@ -83,11 +91,16 @@ namespace TDDD49.ViewModel
         }
 
         public ICommand ImageCommand
-        {0§
+        {
             get
             {
                 return new RelayCommand(SendImageMessage, param => CanExecute(param));
             }
+        }
+
+        private void Buzz(object param)
+        {
+            SendAction(new BuzzMessageModel(true));
         }
 
         private void SendImageMessage(object param)

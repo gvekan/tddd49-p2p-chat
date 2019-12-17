@@ -17,6 +17,7 @@ using TDDD49.Messages;
 using System.IO;
 using Newtonsoft.Json;
 using TDDD49.Exceptions;
+using System.Media;
 
 namespace TDDD49.Services
 {
@@ -136,7 +137,6 @@ namespace TDDD49.Services
 
                 if (s == null) continue;
 
-                // TODO: Lock on ConSocket
                 if (ConSocket == null)
                 {
                     ConSocket = s;
@@ -330,6 +330,8 @@ namespace TDDD49.Services
                 sendMessage = new TextChatMessage((TextMessageModel)Message, Model.Username, Model.id);
             else if (Message is ImageMessageModel)
                 sendMessage = new ImageChatMessage((ImageMessageModel)Message, Model.Username, Model.id);
+            else if (Message is BuzzMessageModel)
+                sendMessage = new BuzzMessage(Model.Username, Model.id);
 
             byte[] byteMessage = Encoding.UTF8.GetBytes(sendMessage.Serialize());
             state.MessageLength = byteMessage.Length;
@@ -442,6 +444,12 @@ namespace TDDD49.Services
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Model.CurrentConnection.Username = ((ChangedUsernameMessage)msg).Sender;
+                    });
+                    break;
+                case "Buzz":
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        SystemSounds.Hand.Play();
                     });
                     break;
                 default:
