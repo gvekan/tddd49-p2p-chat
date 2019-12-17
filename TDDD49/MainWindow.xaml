@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:TDDD49"
         xmlns:views="clr-namespace:TDDD49.Views"
         xmlns:vm="clr-namespace:TDDD49.ViewModel"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
         Title="SeeSharp P2P Chat" Height="450" Width="800">
 

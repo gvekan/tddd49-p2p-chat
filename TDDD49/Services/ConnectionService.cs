@@ -464,7 +464,14 @@ namespace TDDD49.Services
             byte[] bytes = new byte[1024];
             do
             {
-                s.Receive(bytes);
+                try
+                {
+                    s.Receive(bytes);
+                } catch(SocketException E)
+                {
+                    Actions.HandleBugException(new NoConnectionException(), "Other user disconnected");
+                }
+                
                 buffer += Encoding.UTF8.GetString(bytes).TrimEnd('\0');
                 bytes = new byte[256];
             } while (buffer.Substring(buffer.Length - 5) != "<EOM>");

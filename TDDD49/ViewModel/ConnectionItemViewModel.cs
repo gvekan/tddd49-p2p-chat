@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using TDDD49.Commands;
 using TDDD49.Helpers;
@@ -24,9 +25,17 @@ namespace TDDD49.ViewModel
 
         private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Username" || e.PropertyName == "IPAddrPort") 
+            if (e.PropertyName == "Username" || e.PropertyName == "IPAddrPort" || e.PropertyName == "LastMessage") 
             {
                 OnPropertyChanged(e.PropertyName);
+            }
+        }
+
+        public DateTime LastMessage
+        {
+            get
+            {
+                return Model.LastMessage;
             }
         }
 

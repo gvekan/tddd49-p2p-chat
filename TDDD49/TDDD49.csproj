@@ -91,6 +91,7 @@
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Exceptions\NoConnectionException.cs" />
+    <Compile Include="Helpers\ConnectionObservableCollection.cs" />
     <Compile Include="Helpers\IsSenderToStyleConverter.cs" />
     <Compile Include="Helpers\NotifyPropertyChangedBase.cs" />
     <Compile Include="Messages\AcceptDeclineMessage.cs" />

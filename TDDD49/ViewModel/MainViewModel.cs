@@ -12,6 +12,8 @@ using TDDD49.Helpers;
 using TDDD49.Services;
 using TDDD49.Models;
 using System.Collections.ObjectModel;
+using System.Windows.Data;
+using System.ComponentModel;
 
 namespace TDDD49.ViewModel
 {
@@ -32,7 +34,7 @@ namespace TDDD49.ViewModel
             this.Model = Model;
             Model.PropertyChanged += Model_PropertyChanged;
 
-            CreateChatView(); //TODO: Only if currentchat
+            CreateChatView();
         }
 
         private void Model_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -138,7 +140,7 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                return Model.Connections.Select((cm, index) => new ConnectionItemViewModel(cm, ()=>OnConnectionSelected(index))).Where((x) => x.Username.Contains(SearchText));
+                return Model.Connections.Select((cm, index) => new ConnectionItemViewModel(cm, () => OnConnectionSelected(index))).Where((x) => x.Username.Contains(SearchText)).OrderByDescending(cm => cm.LastMessage);
             }
             set
             {
@@ -155,7 +157,6 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                // TODO: Add canExecute Func to detect internet connection
                 return new RelayCommand(parameter => Actions.OpenDialog(typeof(ConnectDialog), new ConnectDialogViewModel(_ConnectionService.Connect)), parameter => !Model.Connected);
             }
         }
@@ -163,7 +164,6 @@ namespace TDDD49.ViewModel
         {
             get
             {
-                // TODO: Add a SettingsDialogViewModel
                 return new RelayCommand(parameter => Actions.OpenDialog(typeof(SettingsDialog), new SettingsDialogViewModel(Model)));
             }
         }

@@ -9,6 +9,7 @@ using TDDD49.Models;
 using Newtonsoft.Json;
 using System.Windows;
 using System.Net;
+using TDDD49.Helpers;
 
 namespace TDDD49.Services
 {
@@ -29,7 +30,7 @@ namespace TDDD49.Services
             string hostName = Dns.GetHostName(); 
             Params.IP = Dns.GetHostByName(hostName).AddressList[0].ToString(); // Private ip
 
-            Params.Connections = new ObservableCollection<ConnectionModel>();
+            Params.Connections = new ConnectionObservableCollection();
 
 
             Params.CurrentConnection = new ConnectionModel(Guid.Empty, "No current connection", "");
@@ -48,6 +49,7 @@ namespace TDDD49.Services
             {
                 case "CurrentConnection":
                 case "Connections":
+                case "LastMessage":
                 case "Port":
                 case "Username":
                     writeAppData();

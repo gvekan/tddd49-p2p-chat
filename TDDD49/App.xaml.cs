@@ -23,20 +23,6 @@ namespace TDDD49
             DataService dataService = new DataService();
 
 
-            /*
-                        for (int i = 0; i < 10; i++)
-            {
-                Params.Connections.Add(new ConnectionModel(Guid.Empty, "user" + i, ""));
-            }
-
-            ObservableCollection<MessageModel> messages = new ObservableCollection<MessageModel>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                messages.Add(new TextMessageModel("Message " + i, i % 2 == 0));
-            }
-             **/
-
             MainModel _MainModel = dataService.Model;
 
 

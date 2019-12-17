@@ -13,14 +13,14 @@ namespace TDDD49.Models
         public class MainModelParams : UserModelParams
         {
             public ConnectionModel CurrentConnection;
-            public ObservableCollection<ConnectionModel> Connections;
+            public ConnectionObservableCollection Connections;
         }
 
         private ConnectionModel _CurrentConnection;
         private bool _Connected;
         //private Guid _ConnectedGuid;
 
-        public ObservableCollection<ConnectionModel> Connections;
+        public ConnectionObservableCollection Connections;
 
         public MainModel(MainModelParams Params) : base(Params)
         {

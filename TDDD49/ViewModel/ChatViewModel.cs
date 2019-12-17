@@ -30,6 +30,7 @@ namespace TDDD49.ViewModel
         public ChatViewModel(Action DisconnectAction, Action<MessageModel> SendAction, Func<object, bool> CanExecute, ConnectionModel Model)
         {
             this.Model = Model;
+            this.Model.LastMessage = DateTime.Now;
             this.DisconnectAction = DisconnectAction;
             this.CanExecute = CanExecute;
             this.SendAction = SendAction;

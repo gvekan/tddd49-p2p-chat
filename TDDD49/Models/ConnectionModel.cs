@@ -14,6 +14,7 @@ namespace TDDD49.Models
     {
         private string _Username;
         private string _IPAddrPort;
+        private DateTime _LastMessage;
         public Guid id;
 
         public MessageObservableCollection Messages = new MessageObservableCollection();
@@ -35,13 +36,21 @@ namespace TDDD49.Models
         private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             this.LastMessage = DateTime.Now;
+            OnPropertyChanged("LastMessage");
             OnPropertyChanged("Messages");
         }
 
         public DateTime LastMessage
         {
-            get;
-            set;
+            get
+            {
+                return _LastMessage;
+            }
+            set
+            {
+                _LastMessage = value;
+                OnPropertyChanged("LastMessage");
+            }
         }
 
         public string Username
