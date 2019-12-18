@@ -21,7 +21,6 @@ namespace TDDD49.ViewModel
     {
         private Action DisconnectAction;
         private Action<MessageModel> SendAction;
-        private Action<MessageModel> ImageAction;
         private Func<object, bool> CanExecute;
         private ConnectionModel Model;
         private string _TextMessage;
@@ -125,7 +124,7 @@ namespace TDDD49.ViewModel
             }
             img = new BitmapImage(new Uri(imagePath));
             
-            MessageModel message = new ImageMessageModel(img, true);
+            MessageModel message = new ImageMessageModel(imagePath, true);
             message.StatusMessage = "Pending";
 
             Application.Current.Dispatcher.Invoke(() =>
@@ -137,7 +136,7 @@ namespace TDDD49.ViewModel
             {
                 SendAction(message);
             }
-            catch (NoConnectionException e)
+            catch (NoConnectionException)
             {
                 message.StatusMessage = "Not delivered";
             }
@@ -152,7 +151,7 @@ namespace TDDD49.ViewModel
             try
             {
                 SendAction(message);
-            } catch (NoConnectionException e)
+            } catch (NoConnectionException)
             {
                 message.StatusMessage = "Not delivered";
             }

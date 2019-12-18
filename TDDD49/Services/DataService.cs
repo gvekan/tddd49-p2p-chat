@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Windows;
 using System.Net;
 using TDDD49.Helpers;
+using System.Windows.Media.Imaging;
 
 namespace TDDD49.Services
 {
@@ -73,6 +74,23 @@ namespace TDDD49.Services
             {
                 return _Model;
             }
+        }
+
+        public string SaveImage(BitmapImage image, Guid id)
+        {
+            BitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+            string dirPath = "/" + id.ToString() + "images/";
+            string filePath = dirPath + Guid.NewGuid();
+            if(!Directory.Exists(PATH + dirPath))
+            {
+                Directory.CreateDirectory(PATH + dirPath);
+            }
+            using (var fileStream = new System.IO.FileStream(PATH + filePath, System.IO.FileMode.Create))
+            {
+                encoder.Save(fileStream);
+            }
+            return PATH + filePath;
         }
 
         private void loadModel()

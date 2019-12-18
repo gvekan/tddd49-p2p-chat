@@ -433,8 +433,10 @@ namespace TDDD49.Services
                     );
                     break;
                 case "ImageChat":
+                    ImageChatMessage convertedMessage = (ImageChatMessage)msg;
+                    string path = DataService.SaveImage(convertedMessage.Image, msg.id);
                     Application.Current.Dispatcher.Invoke(() =>
-                        Model.CurrentConnection.Messages.Add(new ImageMessageModel(((ImageChatMessage)msg).Image, false))
+                        Model.CurrentConnection.Messages.Add(new ImageMessageModel(path, false))
                     );
                     break;
                 case "Disconnect":
@@ -467,7 +469,7 @@ namespace TDDD49.Services
                 try
                 {
                     s.Receive(bytes);
-                } catch(SocketException E)
+                } catch (SocketException)
                 {
                     Actions.HandleBugException(new NoConnectionException(), "Other user disconnected");
                 }
