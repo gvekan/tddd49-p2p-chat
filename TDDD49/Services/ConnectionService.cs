@@ -25,7 +25,7 @@ namespace TDDD49.Services
     public class RecieveStateObject
     {
         public Socket WorkSocket = null;
-        public const int BufferSize = 1024;
+        public const int BufferSize = 7000000;
         public byte[] buffer = new byte[BufferSize];
 
         public StringBuilder sb = new StringBuilder();
@@ -51,6 +51,7 @@ namespace TDDD49.Services
         private bool Running = true;
         private MainModel Model;
         private DataService DataService;
+        private int test = 0;
         #endregion
 
         public ConnectionService(MainModel Model, DataService dataService)
@@ -298,7 +299,7 @@ namespace TDDD49.Services
                 return;
             int bytesRead = state.WorkSocket.EndReceive(ar);
 
-            if(bytesRead > 0)
+            if (bytesRead > 0)
             {
                 state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
                 content = state.sb.ToString();
@@ -332,8 +333,8 @@ namespace TDDD49.Services
                 sendMessage = new ImageChatMessage((ImageMessageModel)Message, Model.Username, Model.id);
             else if (Message is BuzzMessageModel)
                 sendMessage = new BuzzMessage(Model.Username, Model.id);
-
-            byte[] byteMessage = Encoding.UTF8.GetBytes(sendMessage.Serialize());
+            string serializedMessage = sendMessage.Serialize();
+            byte[] byteMessage = Encoding.UTF8.GetBytes(serializedMessage);
             state.MessageLength = byteMessage.Length;
             try
             {
